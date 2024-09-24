@@ -97,14 +97,36 @@ const ThirdPoleProject = () => {
   const renderContent = () => {
     switch (activeTab) {
       case 'home':
-        return (
-          <div className="p-4">
-            <h2 className="text-2xl font-bold mb-4">About Third Pole Project</h2>
-            <p className="text-gray-300">
-              Third Pole Project is an AI-powered weather forecasting and early disaster warning system...
-            </p>
-          </div>
-        );
+  return (
+    <div className="p-4">
+      <h2 className="text-2xl font-bold mb-4">About Third Pole Project</h2>
+      <p className="text-gray-300 mb-4">
+        Third Pole Project is an AI-powered weather forecasting and early disaster warning system that provides highly accurate predictions for governments, militaries, enterprises, and citizens worldwide. Using advanced deep learning techniques combined with numerical weather prediction, Third Pole Project improves forecast horizons and resolution compared to conventional meteorology.
+Our research focuses on weather across the Indian subcontinent, including extreme weather events, climate patterns, and their impacts on various sectors. Through our work, we aim to contribute to a better understanding of this crucial region and inform policy decisions for sustainable development and disaster mitigation.
+Using the OpenBuildings dataset we aim to significantly enhance humanatarian response in the disaster prone areas.
+
+      </p>
+      
+      {/* Video container */}
+      <div className="flex justify-center my-8">
+        <video 
+          className="w-full max-w-md rounded-lg shadow-lg" 
+          controls
+          autoPlay
+          muted
+          loop
+        >
+          <source src={process.env.PUBLIC_URL + "/temporal.mp4"} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      </div>
+      
+      <p className="text-gray-300">
+        Our mission is to provide accurate and timely information about climate changes in the Third Pole region,
+        helping communities and policymakers make informed decisions.
+      </p>
+    </div>
+  );
       case 'research':
         return (
           <div className="p-4">
