@@ -1,9 +1,77 @@
+// src/components/ThirdPoleProject.js
+
 import React, { useState, useMemo } from 'react';
-import IndiaTemperatureChart from './IndiaTemperatureChart';
-import PrecipitationChart from './PrecipitationChart';
-import LandslideChart from './LandslideChart';
-import GlacierChart from './GlacierChart';
-import '../styles/ThirdPoleProject.css'; // Assuming you'll add styles later
+import {
+  LineChart,
+  Line,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from 'recharts';
+
+// Import data from separate files
+import { indiaTemperatureData } from '../data/temperatureData';
+import { weatherData } from '../data/weatherData';
+import { landslideData } from '../data/landslideData';
+import { glacierData } from '../data/glacierData';
+
+// Create separate chart components
+const IndiaTemperatureChart = () => (
+  <ResponsiveContainer width="100%" height={300}>
+    <LineChart data={indiaTemperatureData}>
+      <CartesianGrid strokeDasharray="3 3" stroke="#555" />
+      <XAxis dataKey="year" stroke="#fff" />
+      <YAxis stroke="#fff" domain={[25, 27]} />
+      <Tooltip contentStyle={{ backgroundColor: '#333', border: 'none' }} />
+      <Legend />
+      <Line type="monotone" dataKey="temperature" stroke="#8884d8" name="Avg. Temperature (°C)" />
+    </LineChart>
+  </ResponsiveContainer>
+);
+
+const PrecipitationChart = () => (
+  <ResponsiveContainer width="100%" height={300}>
+    <BarChart data={weatherData}>
+      <CartesianGrid strokeDasharray="3 3" stroke="#555" />
+      <XAxis dataKey="month" stroke="#fff" />
+      <YAxis stroke="#fff" />
+      <Tooltip contentStyle={{ backgroundColor: '#333', border: 'none' }} />
+      <Legend />
+      <Bar dataKey="precipitation" fill="#82ca9d" name="Precipitation (mm)" />
+    </BarChart>
+  </ResponsiveContainer>
+);
+
+const LandslideChart = () => (
+  <ResponsiveContainer width="100%" height={300}>
+    <LineChart data={landslideData}>
+      <CartesianGrid strokeDasharray="3 3" stroke="#555" />
+      <XAxis dataKey="year" stroke="#fff" />
+      <YAxis stroke="#fff" />
+      <Tooltip contentStyle={{ backgroundColor: '#333', border: 'none' }} />
+      <Legend />
+      <Line type="monotone" dataKey="deaths" stroke="#ff7300" name="Deaths from Landslides" />
+    </LineChart>
+  </ResponsiveContainer>
+);
+
+const GlacierChart = () => (
+  <ResponsiveContainer width="100%" height={300}>
+    <LineChart data={glacierData}>
+      <CartesianGrid strokeDasharray="3 3" stroke="#555" />
+      <XAxis dataKey="year" stroke="#fff" />
+      <YAxis stroke="#fff" />
+      <Tooltip contentStyle={{ backgroundColor: '#333', border: 'none' }} />
+      <Legend />
+      <Line type="monotone" dataKey="area" stroke="#8884d8" name="Glacier Area (relative units)" />
+    </LineChart>
+  </ResponsiveContainer>
+);
 
 const ThirdPoleProject = () => {
   const [activeTab, setActiveTab] = useState('home');
@@ -14,34 +82,79 @@ const ThirdPoleProject = () => {
   };
 
   const filteredBlogs = useMemo(() => {
+    // Example filtering logic for blogs
     const blogs = [
-      { title: "Tackling Climate and Water Challenges in the Himalayas using AI", link: "#" },
-      // Add more blogs here
+      {
+        title: "Tackling Climate and Water Challenges in the Himalayas using AI",
+        link: "https://www.himalayanwaterproject.org/post/tackling-climate-and-water-challenges-in-the-himalayas-using-ai?fbclid=PAAaYk42lbCAwvs7NAlLl5tlILoeEEMovhuIRWmo2vMEQ_SAjkvU59c_c5N3g_aem_AUUgE-tuc5yK5O631x1-3Q7zOoMlneCuDTH2uRJHXjU-y7wdNfTwqlPw0oN2RBTUWPc"
+      },
+      // Add more blogs as needed
     ];
+
     return blogs.filter(blog => blog.title.toLowerCase().includes(searchTerm.toLowerCase()));
   }, [searchTerm]);
 
   const renderContent = () => {
     switch (activeTab) {
       case 'home':
-        return <div>Home Content</div>;
+        return (
+          <div className="p-4">
+            <h2 className="text-2xl font-bold mb-4">About Third Pole Project</h2>
+            <p className="text-gray-300">
+              Third Pole Project is an AI-powered weather forecasting and early disaster warning system...
+            </p>
+          </div>
+        );
       case 'research':
-        return <div>Research Content</div>;
+        return (
+          <div className="p-4">
+            <h2 className="text-2xl font-bold mb-4">Research Themes</h2>
+            <ul className="list-disc list-inside text-gray-300">
+              <li>Extreme Weather Events...</li>
+              <li>Climate Modeling and Predictions...</li>
+              <li>Glacier Dynamics and Water Resources...</li>
+              <li>Vegetation Changes and Land Use...</li>
+              <li>Humanitarian response...</li>
+            </ul>
+          </div>
+        );
       case 'visualizations':
         return (
-          <div>
-            <IndiaTemperatureChart />
-            <PrecipitationChart />
-            <LandslideChart />
-            <GlacierChart />
+          <div className="p-4">
+            <h2 className="text-2xl font-bold mb-4">Data Visualizations</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div>
+                <h3 className="text-lg font-bold mb-3">Average Annual Temperature in India (2001-2023)</h3>
+                <IndiaTemperatureChart />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold mb-3">Precipitation Levels</h3>
+                <PrecipitationChart />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold mb-3">Landslide Deaths Over Time</h3>
+                <LandslideChart />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold mb-3">Glacier Retreat Over Time</h3>
+                <GlacierChart />
+              </div>
+            </div>
           </div>
         );
       case 'blogs':
         return (
-          <div>
-            {filteredBlogs.map((blog, index) => (
-              <a key={index} href={blog.link}>{blog.title}</a>
-            ))}
+          <div className="p-4">
+            <h2 className="text-2xl font-bold mb-4">Blogs</h2>
+            <ul className="list-disc list-inside">
+              {filteredBlogs.map((blog, index) => (
+                <li key={index}>
+                  <a href={blog.link} className="text-blue-400 hover:underline">
+                    {blog.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
           </div>
         );
       default:
@@ -50,12 +163,44 @@ const ThirdPoleProject = () => {
   };
 
   return (
-    <div className="third-pole-project">
-      {/* Render the component UI with a tab system */}
-      {renderContent()}
+    <div className="flex flex-col min-h-screen bg-gray-900 text-white">
+      <header className="bg-gray-800 p-4">
+        <div className="container mx-auto flex justify-between items-center">
+          <h1 className="text-2xl font-bold">Third Pole Project</h1>
+          <input
+            type="text"
+            placeholder="Search..."
+            className="px-2 py-1 bg-gray-700 text-white rounded"
+            onChange={handleSearch}
+          />
+        </div>
+      </header>
+      <nav className="bg-gray-700 p-4">
+        <div className="container mx-auto">
+          <ul className="flex space-x-4">
+            {['home', 'research', 'visualizations', 'blogs'].map((tab) => (
+              <li key={tab}>
+                <button
+                  className={`text-white ${activeTab === tab ? 'font-bold' : ''}`}
+                  onClick={() => setActiveTab(tab)}
+                >
+                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </nav>
+      <main className="flex-grow container mx-auto mt-8">
+        {renderContent()}
+      </main>
+      <footer className="bg-gray-800 p-4 mt-8">
+        <div className="container mx-auto text-center text-gray-400">
+          © 2024 Third Pole Project. All rights reserved.
+        </div>
+      </footer>
     </div>
   );
 };
 
 export default ThirdPoleProject;
-
