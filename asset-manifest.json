@@ -1,16 +1,15 @@
 {
   "files": {
-    "main.css": "/third-pole-project/static/css/main.489c4be8.css",
-    "main.js": "/third-pole-project/static/js/main.e90c45b3.js",
-    "static/js/453.0134fc99.chunk.js": "/third-pole-project/static/js/453.0134fc99.chunk.js",
-    "static/media/logo.svg": "/third-pole-project/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
+    "main.css": "/third-pole-project/static/css/main.a7a81fc5.css",
+    "main.js": "/third-pole-project/static/js/main.2db0dd08.js",
+    "static/js/453.57086202.chunk.js": "/third-pole-project/static/js/453.57086202.chunk.js",
     "index.html": "/third-pole-project/index.html",
-    "main.489c4be8.css.map": "/third-pole-project/static/css/main.489c4be8.css.map",
-    "main.e90c45b3.js.map": "/third-pole-project/static/js/main.e90c45b3.js.map",
-    "453.0134fc99.chunk.js.map": "/third-pole-project/static/js/453.0134fc99.chunk.js.map"
+    "main.a7a81fc5.css.map": "/third-pole-project/static/css/main.a7a81fc5.css.map",
+    "main.2db0dd08.js.map": "/third-pole-project/static/js/main.2db0dd08.js.map",
+    "453.57086202.chunk.js.map": "/third-pole-project/static/js/453.57086202.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.489c4be8.css",
-    "static/js/main.e90c45b3.js"
+    "static/css/main.a7a81fc5.css",
+    "static/js/main.2db0dd08.js"
   ]
 }
