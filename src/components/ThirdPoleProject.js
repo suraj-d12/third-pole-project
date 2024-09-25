@@ -83,23 +83,23 @@ const ThirdPoleProject = () => {
 const researchItems = [
   {
     title: 'Extreme Weather Events',
-    image: 'url("/Users/surajdalal/Documents/third-pole-project/public/cloud.jpg.avif")',
+    image: 'url("cloud.jpg.avif")',
   },
   {
     title: 'Climate Modeling and Predictions',
-    image: 'url("/Users/surajdalal/Documents/third-pole-project/public/earth.jpg")',
+    image: 'url("earth.jpg")',
   },
   {
     title: 'Glacier Dynamics and Water Resources',
-    image: 'url("/Users/surajdalal/Documents/third-pole-project/public/glacier2.jpg")',
+    image: 'url("glacier2.jpg")',
   },
   {
     title: 'Vegetation Changes and Land Use',
-    image: 'url("/Users/surajdalal/Documents/third-pole-project/publicdisaster.jpg.webp")',
+    image: 'url("publicdisaster.jpg.webp")',
   },
   {
     title: 'Humanitarian Response',
-    image: 'url(/Users/surajdalal/Documents/third-pole-project/public/floods.jpg.webp")',
+    image: 'url("floods.jpg.webp")',
   },
 ];
 
