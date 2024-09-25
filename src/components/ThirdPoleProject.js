@@ -95,11 +95,15 @@ const researchItems = [
   },
   {
     title: 'Vegetation Changes and Land Use',
-    image: 'url("publicdisaster.jpg.webp")',
+    image: 'url("drought.jpg.webp")',
   },
   {
     title: 'Humanitarian Response',
     image: 'url("floods.jpg.webp")',
+  },
+  {
+    title: "Terrestrial Water Changes",
+    image: 'url("Gangotri.jpg")',
   },
 ];
 
