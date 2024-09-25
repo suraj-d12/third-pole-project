@@ -80,6 +80,47 @@ const ThirdPoleProject = () => {
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
+const researchItems = [
+  {
+    title: 'Extreme Weather Events',
+    image: 'url("/Users/surajdalal/Documents/third-pole-project/public/cloud.jpg.avif")',
+  },
+  {
+    title: 'Climate Modeling and Predictions',
+    image: 'url("/Users/surajdalal/Documents/third-pole-project/public/earth.jpg")',
+  },
+  {
+    title: 'Glacier Dynamics and Water Resources',
+    image: 'url("/Users/surajdalal/Documents/third-pole-project/public/glacier2.jpg")',
+  },
+  {
+    title: 'Vegetation Changes and Land Use',
+    image: 'url("/Users/surajdalal/Documents/third-pole-project/publicdisaster.jpg.webp")',
+  },
+  {
+    title: 'Humanitarian Response',
+    image: 'url(/Users/surajdalal/Documents/third-pole-project/public/floods.jpg.webp")',
+  },
+];
+
+// Define a new ResearchGrid component
+const ResearchGrid = () => (
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+    {researchItems.map((item, index) => (
+      <div
+        key={index}
+        className="bg-cover bg-center h-40 flex items-center justify-center text-white font-bold text-xl"
+        style={{
+          backgroundImage: item.image,
+        }}
+      >
+        <div className="bg-black bg-opacity-50 p-2 rounded">
+          {item.title}
+        </div>
+      </div>
+    ))}
+  </div>
+);
 
   const filteredBlogs = useMemo(() => {
     // Example filtering logic for blogs
@@ -127,20 +168,15 @@ Using the OpenBuildings dataset we aim to significantly enhance humanatarian res
       </p>
     </div>
   );
-      case 'research':
-        return (
-          <div className="p-4">
-            <h2 className="text-2xl font-bold mb-4">Research Themes</h2>
-            <ul className="list-disc list-inside text-gray-300">
-              <li>Extreme Weather Events...</li>
-              <li>Climate Modeling and Predictions...</li>
-              <li>Glacier Dynamics and Water Resources...</li>
-              <li>Vegetation Changes and Land Use...</li>
-              <li>Humanitarian response...</li>
-            </ul>
-          </div>
-        );
-      case 'visualizations':
+case 'research':
+  return (
+    <div className="p-4">
+      <h2 className="text-2xl font-bold mb-4">Research Themes</h2>
+      <ResearchGrid />
+    </div>
+  );
+
+        case 'visualizations':
         return (
           <div className="p-4">
             <h2 className="text-2xl font-bold mb-4">Data Visualizations</h2>
