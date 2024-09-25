@@ -95,7 +95,7 @@ const researchItems = [
   },
   {
     title: 'Vegetation Changes and Land Use',
-    image: 'url("drought.jpg.webp")',
+    image: 'url("drought.jpeg.webp")',
   },
   {
     title: 'Humanitarian Response',
