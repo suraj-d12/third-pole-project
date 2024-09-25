@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/third-pole-project/static/css/main.73bba320.css",
-    "main.js": "/third-pole-project/static/js/main.20f85980.js",
+    "main.css": "/third-pole-project/static/css/main.88b989d2.css",
+    "main.js": "/third-pole-project/static/js/main.18a5b52f.js",
     "static/js/453.57086202.chunk.js": "/third-pole-project/static/js/453.57086202.chunk.js",
     "index.html": "/third-pole-project/index.html",
-    "main.73bba320.css.map": "/third-pole-project/static/css/main.73bba320.css.map",
-    "main.20f85980.js.map": "/third-pole-project/static/js/main.20f85980.js.map",
+    "main.88b989d2.css.map": "/third-pole-project/static/css/main.88b989d2.css.map",
+    "main.18a5b52f.js.map": "/third-pole-project/static/js/main.18a5b52f.js.map",
     "453.57086202.chunk.js.map": "/third-pole-project/static/js/453.57086202.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.73bba320.css",
-    "static/js/main.20f85980.js"
+    "static/css/main.88b989d2.css",
+    "static/js/main.18a5b52f.js"
   ]
 }
