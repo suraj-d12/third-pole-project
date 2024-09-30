@@ -15,7 +15,7 @@ import {
 } from 'recharts';
 
 // Import data from separate file
-import LossEstimateVisualization from './LossEstimateVisualization';
+import LossEstimate from './LossEstimate';
 import ClimateDisasterVisualizations from './ClimateDisasterVisualizations';
 import { indiaTemperatureData } from '../data/temperatureData';
 import { weatherData } from '../data/weatherData';
