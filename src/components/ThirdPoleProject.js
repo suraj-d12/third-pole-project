@@ -182,11 +182,11 @@ case 'research':
     </div>
   );
 
-case 'visualizations':
+case 'Loss Estimate':
   return (
     <div className="p-4">
-      <h2 className="text-2xl font-bold mb-4">Loss Estimate Visualizations</h2>
-      <LossEstimateVisualization />
+      <h2 className="text-2xl font-bold mb-4">Loss Estimate</h2>
+      <LossEstimate/>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="p-4">
           <h2 className="text-2xl font-bold mb-4">Data Visualizations</h2>
