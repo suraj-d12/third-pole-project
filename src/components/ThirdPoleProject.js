@@ -182,37 +182,40 @@ case 'research':
     </div>
   );
 
-        case 'visualizations':
-        return (
-           <div className="p-4">
-            <h2 className="text-2xl font-bold mb-4">Loss Estimate Visualizations</h2>
-            <LossEstimateVisualization />
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="p-4">
-            <h2 className="text-2xl font-bold mb-4">Data Visualizations</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div>
-                <h3 className="text-lg font-bold mb-3">Average Annual Temperature in India (2001-2023)</h3>
-                <IndiaTemperatureChart />
-              </div>
-              <div>
-                <h3 className="text-lg font-bold mb-3">Precipitation Levels</h3>
-                <PrecipitationChart />
-              </div>
-              <div>
-                <h3 className="text-lg font-bold mb-3">Landslide Deaths Over Time</h3>
-                <LandslideChart />
-              </div>
-              <div>
-                <h3 className="text-lg font-bold mb-3">Glacier Retreat Over Time</h3>
-                <GlacierChart />
-              </div>
+case 'visualizations':
+  return (
+    <div className="p-4">
+      <h2 className="text-2xl font-bold mb-4">Loss Estimate Visualizations</h2>
+      <LossEstimateVisualization />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="p-4">
+          <h2 className="text-2xl font-bold mb-4">Data Visualizations</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
+              <h3 className="text-lg font-bold mb-3">Average Annual Temperature in India (2001-2023)</h3>
+              <IndiaTemperatureChart />
             </div>
-               <div className="mt-8">
-              <ClimateDisasterVisualizations />
+            <div>
+              <h3 className="text-lg font-bold mb-3">Precipitation Levels</h3>
+              <PrecipitationChart />
+            </div>
+            <div>
+              <h3 className="text-lg font-bold mb-3">Landslide Deaths Over Time</h3>
+              <LandslideChart />
+            </div>
+            <div>
+              <h3 className="text-lg font-bold mb-3">Glacier Retreat Over Time</h3>
+              <GlacierChart />
             </div>
           </div>
-        );
+          <div className="mt-8">
+            <ClimateDisasterVisualizations />
+          </div>
+        </div> 
+      </div> 
+    </div>
+  );
+
       case 'blogs':
         return (
           <div className="p-4">
