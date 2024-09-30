@@ -87,5 +87,5 @@ const ClimateDisasterVisualizations = () => {
     </ChartWrapper>
   </div>
 );
-
+};
 export default ClimateDisasterVisualizations;
