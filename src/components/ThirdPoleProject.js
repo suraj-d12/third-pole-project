@@ -14,7 +14,8 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 
-// Import data from separate files
+// Import data from separate file
+import ClimateDisasterVisualizations from './ClimateDisasterVisualizations';
 import { indiaTemperatureData } from '../data/temperatureData';
 import { weatherData } from '../data/weatherData';
 import { landslideData } from '../data/landslideData';
@@ -201,6 +202,9 @@ case 'research':
                 <h3 className="text-lg font-bold mb-3">Glacier Retreat Over Time</h3>
                 <GlacierChart />
               </div>
+            </div>
+               <div className="mt-8">
+              <ClimateDisasterVisualizations />
             </div>
           </div>
         );
