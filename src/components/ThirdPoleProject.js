@@ -15,6 +15,7 @@ import {
 } from 'recharts';
 
 // Import data from separate file
+import LossEstimateVisualization from './LossEstimateVisualization';
 import ClimateDisasterVisualizations from './ClimateDisasterVisualizations';
 import { indiaTemperatureData } from '../data/temperatureData';
 import { weatherData } from '../data/weatherData';
@@ -183,6 +184,10 @@ case 'research':
 
         case 'visualizations':
         return (
+           <div className="p-4">
+            <h2 className="text-2xl font-bold mb-4">Loss Estimate Visualizations</h2>
+            <LossEstimateVisualization />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="p-4">
             <h2 className="text-2xl font-bold mb-4">Data Visualizations</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
