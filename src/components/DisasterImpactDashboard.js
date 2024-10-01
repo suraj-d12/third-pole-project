@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ComposedChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Card, CardHeader, CardContent } from './CardComponents';
-import { disasterData, economicData } from '../data/climateDisasterData';
+import { disasterData, economicData } from '../data/DisasterDashboardData';
 
 const processData = () => {
   const years = Array.from({ length: 2024 - 1980 +1 }, (_, i) => 1980+ i);
