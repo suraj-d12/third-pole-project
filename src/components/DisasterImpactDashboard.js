@@ -4,7 +4,7 @@ import { Card, CardHeader, CardContent } from './CardComponents';
 import { disasterData, economicData } from '../data/climateDisasterData';
 
 const processData = () => {
-  const years = Array.from({ length: 2024 - 1980 +1 }, (_, i) => 1995 + i);
+  const years = Array.from({ length: 2024 - 1980 +1 }, (_, i) => 1980+ i);
   
   return years.map(year => {
     const yearDisasters = disasterData.filter(d => d.Year === year);
