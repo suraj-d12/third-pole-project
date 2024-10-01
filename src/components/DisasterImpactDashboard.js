@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ComposedChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Card, CardHeader, CardContent } from '../../components/ui/card';
+import { Card, CardHeader, CardContent } from '../ui/Card';
 import { disasterData, economicData } from '../data/climateDisasterData';
 
 const processData = () => {
@@ -44,7 +44,7 @@ const DisasterImpactDashboard = () => {
   const formatINR = (value) => `₹${value.toFixed(2)} Cr`;
 
   return (
-    <Card className="w-full max-w-4xl mx-auto bg-gray-800 text-white">
+    <Card className="w-full max-w-4xl mx-auto text-white">
       <CardHeader>
         <h2 className="text-2xl font-bold">Climate Disaster Impact in India (1995-2023)</h2>
         <p>Tracking lives lost and economic damage from multiple disaster types</p>
@@ -93,5 +93,4 @@ const DisasterImpactDashboard = () => {
 };
 
 export default DisasterImpactDashboard;
-
 
