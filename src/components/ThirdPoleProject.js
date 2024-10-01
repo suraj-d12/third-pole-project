@@ -184,6 +184,7 @@ case 'research':
 
 case 'Visualisations':
   return (
+    <div>
         <div>
           <h2 className="text-2xl font-bold mb-4">Disaster Impact in India (1980-2024)</h2>
           <DisasterImpactDashboard />
@@ -214,6 +215,7 @@ case 'Visualisations':
         </div>
       </div> 
     </div>
+   </div>
   );
 
       case 'blogs':
