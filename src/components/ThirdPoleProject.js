@@ -15,7 +15,7 @@ import {
 } from 'recharts';
 
 // Import data from separate file
-import generateData from './LossEstimate';
+import DisasterImpactDashboard from './DisasterImpactDashboard';
 import ClimateDisasterVisualizations from './ClimateDisasterVisualizations';
 import { indiaTemperatureData } from '../data/temperatureData';
 import { weatherData } from '../data/weatherData';
@@ -182,13 +182,13 @@ case 'research':
     </div>
   );
 
-case 'Loss Estimate':
+case 'Visualisations':
   return (
-    <div className="p-4">
-      <h2 className="text-2xl font-bold mb-4">Loss Estimate</h2>
-      <LossEstimate/>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="p-4">
+        <div>
+          <h2 className="text-2xl font-bold mb-4">Disaster Impact in India (1980-2024)</h2>
+          <DisasterImpactDashboard />
+        </div>
+        <div>
           <h2 className="text-2xl font-bold mb-4">Data Visualizations</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
@@ -208,10 +208,10 @@ case 'Loss Estimate':
               <GlacierChart />
             </div>
           </div>
-          <div className="mt-8">
-            <ClimateDisasterVisualizations />
-          </div>
-        </div> 
+        </div>
+        <div className="mt-8">
+          <ClimateDisasterVisualizations />
+        </div>
       </div> 
     </div>
   );
