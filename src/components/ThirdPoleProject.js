@@ -15,7 +15,6 @@ import {
 } from 'recharts';
 
 // Import data from separate file
-import Errorboundary from './Errorboundary';
 import DisasterImpactDashboard from './DisasterImpactDashboard';
 import ClimateDisasterVisualizations from './ClimateDisasterVisualizations';
 import { indiaTemperatureData } from '../data/temperatureData';
@@ -185,50 +184,36 @@ case 'research':
 
 case 'Visualisations':
   return (
-    <ErrorBoundary>
       <div className="p-4">
         <div>
           <h2 className="text-2xl font-bold mb-4">Disaster Impact in India (1980-2024)</h2>
-          <ErrorBoundary>
             <DisasterImpactDashboard />
-          </ErrorBoundary>
         </div>
         <div className="mt-8">
           <h2 className="text-2xl font-bold mb-4">Data Visualizations</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <ErrorBoundary>
               <div>
                 <h3 className="text-lg font-bold mb-3">Average Annual Temperature in India (2001-2023)</h3>
                 <IndiaTemperatureChart />
               </div>
-            </ErrorBoundary>
-            <ErrorBoundary>
               <div>
                 <h3 className="text-lg font-bold mb-3">Precipitation Levels</h3>
                 <PrecipitationChart />
               </div>
-            </ErrorBoundary>
-            <ErrorBoundary>
               <div>
                 <h3 className="text-lg font-bold mb-3">Landslide Deaths Over Time</h3>
                 <LandslideChart />
               </div>
-            </ErrorBoundary>
-            <ErrorBoundary>
               <div>
                 <h3 className="text-lg font-bold mb-3">Glacier Retreat Over Time</h3>
                 <GlacierChart />
               </div>
-            </ErrorBoundary>
           </div>
         </div>
         <div className="mt-8">
-          <ErrorBoundary>
             <ClimateDisasterVisualizations />
-          </ErrorBoundary>
         </div>
       </div>
-    </ErrorBoundary>
   );
       case 'blogs':
         return (
