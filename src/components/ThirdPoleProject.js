@@ -15,6 +15,7 @@ import {
 } from 'recharts';
 
 // Import data from separate file
+import Errorboundary from './Errorboundary';
 import DisasterImpactDashboard from './DisasterImpactDashboard';
 import ClimateDisasterVisualizations from './ClimateDisasterVisualizations';
 import { indiaTemperatureData } from '../data/temperatureData';
