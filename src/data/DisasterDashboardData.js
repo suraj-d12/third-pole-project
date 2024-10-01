@@ -85,7 +85,7 @@ export const disasterData =
     {Year: 2023, "Disaster Type": "Flood", "Total Deaths": 62},
     {Year: 2023, "Disaster Type": "Storm", "Total Deaths": 20},
     {Year: 2024, "Disaster Type": "Landslide","Total Deaths":430},
-    {Year  2024, "Disaster Type": "Flood", 'Total Deaths":142}
+    {Year: 2024, "Disaster Type": "Flood", "Total Deaths":142}
 ];
 
 export const economicData = [
