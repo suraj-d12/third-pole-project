@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { ComposedChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Card, CardHeader, CardContent } from '@/components/ui/card';
+import { Card, CardHeader, CardContent } from '../../components/ui/card';
 import { disasterData, economicData } from '../data/climateDisasterData';
 
 const processData = () => {
-  const years = Array.from({ length: 2024 - 1980 + 1 }, (_, i) => 1980 + i);
+  const years = Array.from({ length: 29 }, (_, i) => 1995 + i);
   
   return years.map(year => {
     const yearDisasters = disasterData.filter(d => d.Year === year);
@@ -93,3 +93,5 @@ const DisasterImpactDashboard = () => {
 };
 
 export default DisasterImpactDashboard;
+
+
