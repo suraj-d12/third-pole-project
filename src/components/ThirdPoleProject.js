@@ -169,7 +169,7 @@ Using the OpenBuildings dataset we aim to significantly enhance humanatarian res
       </div>
       
       <p className="text-gray-300">
-        Our mission is to To revolutionize weather forecasting and disaster management in the Indian subcontinent.
+        Our mission is to revolutionize weather forecasting and disaster management in the Indian subcontinent.
 	  </p>
     </div>
   );
