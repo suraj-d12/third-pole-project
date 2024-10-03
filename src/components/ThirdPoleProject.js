@@ -169,9 +169,8 @@ Using the OpenBuildings dataset we aim to significantly enhance humanatarian res
       </div>
       
       <p className="text-gray-300">
-        Our mission is to provide accurate and timely information about climate changes in the Third Pole region,
-        helping communities and policymakers make informed decisions.
-      </p>
+        Our mission is to To revolutionize weather forecasting and disaster management in the Indian subcontinent.
+	  </p>
     </div>
   );
 case 'research':
