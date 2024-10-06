@@ -216,10 +216,12 @@ case 'research':
   </div>
 );
 
-      case 'blogs':
+      case 'blogs and podcasts':
         return (
           <div className="p-4">
-            <h2 className="text-2xl font-bold mb-4">Blogs</h2>
+            <h2 className="text-2xl font-bold mb-4">Blogs and Podcasts</h2>
+	   <div className="mb-16"> 
+	     <h3 className="text-xl font-bold mb-2">Blogs</h3>
             <ul className="list-disc list-inside">
               {filteredBlogs.map((blog, index) => (
                 <li key={index}>
@@ -229,6 +231,27 @@ case 'research':
                 </li>
               ))}
             </ul>
+	</div>
+	 <div className="h-16"></div> 
+            
+            <div className="mt-16"> 
+              <h3 className="text-xl font-bold mb-2">Podcast</h3>
+              <div className="bg-gray-800 p-4 rounded-lg">
+                <h4 className="text-lg font-semibold mb-2">Third Pole Project Podcast</h4>
+                <p className="text-gray-300 mb-4">
+                   Join us as we explore the latest developments in climate science, disaster management, 
+                  and technological innovations in weather forecasting. Tales of Tempests, Time, and Techy Tomorrows. How has weather shaped our civilisations, how does it continue to impact our lives,                   and what role does technology play?
+		</p>
+                <a 
+                  href="https://open.spotify.com/show/0lY18DcFTqR0RIIGE2kAJg?si=zhc8Rs-HSbC5U57JNCQAeg" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition duration-300"
+                >
+                  Listen on Spotify
+                </a>
+              </div>
+            </div>
           </div>
         );
       default:
@@ -236,45 +259,45 @@ case 'research':
     }
   };
 
-  return (
-    <div className="flex flex-col min-h-screen bg-gray-900 text-white">
-      <header className="bg-gray-800 p-4">
-        <div className="container mx-auto flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Third Pole Project</h1>
-          <input
-            type="text"
-            placeholder="Search..."
-            className="px-2 py-1 bg-gray-700 text-white rounded"
-            onChange={handleSearch}
-          />
-        </div>
-      </header>
-      <nav className="bg-gray-700 p-4">
-        <div className="container mx-auto">
-          <ul className="flex space-x-4">
-            {['home', 'research', 'visualizations', 'blogs'].map((tab) => (
-              <li key={tab}>
-                <button
-                  className={`text-white ${activeTab === tab ? 'font-bold' : ''}`}
-                  onClick={() => setActiveTab(tab)}
-                >
-                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </nav>
-      <main className="flex-grow container mx-auto mt-8">
-        {renderContent()}
-      </main>
-      <footer className="bg-gray-800 p-4 mt-8">
-        <div className="container mx-auto text-center text-gray-400">
-          © 2024 Third Pole Project. All rights reserved.
-        </div>
-      </footer>
-    </div>
-  );
-};
+return (
+  <div className="flex flex-col min-h-screen bg-gray-900 text-white">
+    <header className="bg-gray-800 p-4">
+      <div className="container mx-auto flex justify-between items-center">
+        <h1 className="text-2xl font-bold">Third Pole Project</h1>
+        <input
+          type="text"
+          placeholder="Search..."
+          className="px-2 py-1 bg-gray-700 text-white rounded"
+          onChange={handleSearch}
+        />
+      </div>
+    </header> 
 
+    <nav className="bg-gray-700 p-4">
+      <div className="container mx-auto">
+        <ul className="flex space-x-4">
+          {['home', 'research', 'visualizations', 'blogs and podcasts'].map((tab) => (
+            <li key={tab}>
+              <button
+                className={`text-white ${activeTab === tab ? 'font-bold' : ''}`}
+                onClick={() => setActiveTab(tab)}
+              >
+                {tab.charAt(0).toUpperCase() + tab.slice(1)}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </nav>
+
+    <main className="flex-grow container mx-auto mt-8">
+      {renderContent()}
+    </main>
+
+    <footer className="bg-gray-800 p-4 mt-8">
+    </footer>
+
+  </div> 
+);
+};
 export default ThirdPoleProject;
