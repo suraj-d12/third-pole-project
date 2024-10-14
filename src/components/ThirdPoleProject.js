@@ -250,6 +250,22 @@ case 'research':
                 >
                   Listen on Spotify
                 </a>
+	       <a
+                href="https://podcasts.apple.com/us/podcast/weathering-the-ages/id1773291733"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded"
+              >
+                Listen on Apple Podcasts
+              </a>
+	       <a
+                href="https://youtu.be/i6ivO4CZWkk?feature=shared"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+              >
+                Watch on YouTube
+              </a>
               </div>
             </div>
           </div>
