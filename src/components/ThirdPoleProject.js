@@ -1,6 +1,10 @@
 // src/components/ThirdPoleProject.js
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+
 import {
   LineChart,
   Line,
@@ -21,6 +25,13 @@ import { indiaTemperatureData } from '../data/temperatureData';
 import { weatherData } from '../data/weatherData';
 import { landslideData } from '../data/landslideData';
 import { glacierData } from '../data/glacierData';
+
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+  iconUrl: require('leaflet/dist/images/marker-icon.png'),
+  shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+});
 
 // Create separate chart components
 const IndiaTemperatureChart = () => (
@@ -78,7 +89,8 @@ const GlacierChart = () => (
 const ThirdPoleProject = () => {
   const [activeTab, setActiveTab] = useState('home');
   const [searchTerm, setSearchTerm] = useState('');
-
+  const [selectedTheme, setSelectedTheme] = useState(null);
+  const [hoveredTheme, setHoveredTheme] = useState(null);
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
@@ -86,31 +98,59 @@ const researchItems = [
   {
     title: 'Extreme Weather Events',
     image: 'url("cloud.jpg.avif")',
-  },
+    latitude: 28.6139,
+    longitude: 77.2090,
+    description: 'Study of extreme weather patterns in India  and surrounding regions, focusing on heat waves and monsoon variability.',
+    },
   {
     title: 'Climate Modeling and Predictions',
     image: 'url("earth.jpg")',
-  },
+    latitude: 22.5726,
+    longitude: 88.3639,
+    description: 'Advanced climate modeling techniques applied, predicting long-term climate trends and their impacts.',
+    },
   {
     title: 'Glacier Dynamics and Water Resources',
     image: 'url("glacier2.jpg")',
+    latitude: 33.45,
+    longitude: 76.18,
+    description: 'Monitoring of Drang-Drung Glacier retreat and its effects on water resources and formation of glacial lakes.',
   },
   {
     title: 'Vegetation Changes and Land Use',
     image: 'url("drought.jpeg.webp")',
-  },
+    latitude: 26.8467,
+    longitude: 80.9462,
+    description: 'Analysis of changing vegetation patterns and land use practices, with a focus on agricultural impacts.',
+    },
   {
     title: 'Humanitarian Response',
     image: 'url("floods.jpg.webp")',
+    latitude: 11.46,
+    longitude: 76.13,
+    description: 'Development of early warning systems and disaster response strategies for disaster-prone areas.',
   },
   {
     title: "Terrestrial Water Changes",
     image: 'url("Gangotri.jpg")',
-  },
+    latitude: 30.9980,
+    longitude: 78.9400,
+    description: 'Comprehensive study of terrestrial water dynamics in the Gangotri region, including glacial melt, precipitation patterns, and river flow changes.',
+    },
 ];
-
+const LocationCoordinates = ({ latitude, longitude }) => (
+    <div className="mt-2 text-sm">
+      <p>Latitude: {latitude.toFixed(4)}</p>
+      <p>Longitude: {longitude.toFixed(4)}</p>
+    </div>
+  );
 // Define a new ResearchGrid component
-const ResearchGrid = () => (
+const ResearchGrid = ({ 
+  researchItems, 
+  setSelectedTheme, 
+  hoveredTheme, 
+  setHoveredTheme 
+}) => (
   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
     {researchItems.map((item, index) => (
       <div
@@ -119,16 +159,60 @@ const ResearchGrid = () => (
         style={{
           backgroundImage: item.image,
         }}
+	onClick={() => setSelectedTheme(item)}
+          onMouseEnter={() => setHoveredTheme(item)}
+          onMouseLeave={() => setHoveredTheme(null)}
+        >
       >
         <div className="bg-black bg-opacity-50 p-2 rounded">
           {item.title}
         </div>
+	<div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-75 p-2">
+              <LocationCoordinates latitude={item.latitude} longitude={item.longitude} />
+            </div>
+          )}
       </div>
     ))}
   </div>
 );
 
-  const filteredBlogs = useMemo(() => {
+  // Component for map
+  const ResearchMap = () => {
+	   useEffect(() => { }, []);
+    // If using server-side rendering, we need to check if window is defined
+    if (typeof window === 'undefined') {
+      return null;
+    }
+// Import map components only on client side
+    const { MapContainer, TileLayer, Marker, Popup } = require('react-leaflet');	     
+    return (
+      <MapContainer center={[28.6139, 77.2090]} zoom={5} style={{ height: '400px', width: '100%' }}>
+        <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        />
+        {researchItems.map((item, index) => (
+          <Marker key={index} position={[item.latitude, item.longitude]}>
+            <Popup>
+              <strong>{item.title}</strong>
+              <br />
+              {item.description}
+            </Popup>
+          </Marker>
+        ))}
+      </MapContainer>
+    );
+  };
+
+const SelectedThemeDetails = ({ theme }) => (
+    <div className="mt-4 p-4 bg-gray-800 rounded-lg">
+      <h3 className="text-xl font-bold mb-2">{theme.title}</h3>
+      <p className="mb-2">{theme.description}</p>
+      <LocationCoordinates latitude={theme.latitude} longitude={theme.longitude} />
+    </div>
+  );
+
+const filteredBlogs = useMemo(() => {
     // Example filtering logic for blogs
     const blogs = [
       {
@@ -174,13 +258,23 @@ Using the OpenBuildings dataset we aim to significantly enhance humanatarian res
     </div>
   );
 case 'research':
-  return (
-    <div className="p-4">
-      <h2 className="text-2xl font-bold mb-4">Research Themes</h2>
-      <ResearchGrid />
-    </div>
-  );
-
+        return (
+          <div className="p-4">
+            <h2 className="text-2xl font-bold mb-4">Research Themes</h2>
+            <p className="mb-4">Hover over a research theme to view its location coordinates. Click to see more details.</p>
+            <ResearchGrid 
+              researchItems={researchItems}
+              setSelectedTheme={setSelectedTheme}
+              hoveredTheme={hoveredTheme}
+              setHoveredTheme={setHoveredTheme}
+            />
+            {selectedTheme && <SelectedThemeDetails theme={selectedTheme} />}
+            <div className="mt-8">
+              <h3 className="text-xl font-bold mb-4">Research Locations Map</h3>
+              <ResearchMap />
+            </div>
+          </div>
+        );
  case 'visualizations':
    return (
   <div className="p-4">
