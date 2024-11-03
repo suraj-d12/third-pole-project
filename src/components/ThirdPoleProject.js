@@ -111,22 +111,71 @@ const researchItems = [
 
 // Define a new ResearchGrid component
 const ResearchGrid = () => (
-  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-    {researchItems.map((item, index) => (
-      <div
-        key={index}
-        className="bg-cover bg-center h-40 flex items-center justify-center text-white font-bold text-xl"
-        style={{
-          backgroundImage: item.image,
-        }}
-      >
-        <div className="bg-black bg-opacity-50 p-2 rounded">
-          {item.title}
+  <div className="space-y-8">
+    {/* Research Items Grid */}
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      {researchItems.map((item, index) => (
+        <div
+          key={index}
+          className="bg-cover bg-center h-40 flex items-center justify-center text-white font-bold text-xl"
+          style={{
+            backgroundImage: item.image,
+          }}
+        >
+          <div className="bg-black bg-opacity-50 p-2 rounded">
+            {item.title}
+          </div>
+        </div>
+      ))}
+    </div>
+    
+    {/* Videos Section */}
+    <div className="mt-12 space-y-8">
+      {/* First Video */}
+      <div className="max-w-3xl mx-auto">
+        <div className="bg-gray-800 rounded-lg overflow-hidden">
+          <video 
+            className="w-full" 
+            controls
+            autoPlay
+            muted
+            loop
+          >
+            <source src={process.env.PUBLIC_URL + "/videos/temporal.mp4"} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          <div className="p-4">
+            <p className="text-gray-300 text-lg">
+              Temporal analysis of extreme weather patterns.
+            </p>
+          </div>
         </div>
       </div>
-    ))}
+
+      {/* Second Video */}
+      <div className="max-w-3xl mx-auto">
+        <div className="bg-gray-800 rounded-lg overflow-hidden">
+          <video 
+            className="w-full" 
+            controls
+            autoPlay
+            muted
+            loop
+          >
+            <source src={process.env.PUBLIC_URL + "/videos/glacier.mp4"} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          <div className="p-4">
+            <p className="text-gray-300 text-lg">
+              Time-lapse visualization of glacier retreat.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 );
+
 
   const filteredBlogs = useMemo(() => {
     // Example filtering logic for blogs
