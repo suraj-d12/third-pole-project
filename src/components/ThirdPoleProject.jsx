@@ -163,7 +163,7 @@ const ThirdPoleProject = () => {
                 muted
                 loop
               >
-                <source src={process.env.PUBLIC_URL + "/temporal.mp4"} type="video/mp4" />
+                <source src={import.meta.env.BASE_URL + "temporal.mp4"} type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
             </div>
