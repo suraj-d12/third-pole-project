@@ -5,15 +5,25 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Inter', 'sans-serif'],
+        heading: ['Outfit', 'sans-serif'],
+      },
       colors: {
-        primary: '#1DA1F2',  // Customize or add colors
-        secondary: '#14171A',
-      },
-      spacing: {
-        '128': '32rem',      // Add custom spacing
-      },
-      borderRadius: {
-        '4xl': '2rem',       // Add custom border radius
+        primary: {
+          DEFAULT: '#38bdf8', // Light Blue 400
+          dark: '#0284c7',    // Light Blue 600
+        },
+        secondary: {
+          DEFAULT: '#22d3ee', // Cyan 400
+          dark: '#0891b2',    // Cyan 600
+        },
+        dark: {
+          900: '#0f172a',     // Slate 900
+          800: '#1e293b',     // Slate 800
+          700: '#334155',     // Slate 700
+        },
+        accent: '#f97316',    // Orange 500
       },
     },
   },

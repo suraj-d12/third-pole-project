@@ -1,4 +1,4 @@
-// src/components/ThirdPoleProject.js
+// src/components/ThirdPoleProject.jsx
 
 import React, { useState, useMemo } from 'react';
 import {
@@ -14,24 +14,55 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 
-// Import data from separate file
 import DisasterImpactDashboard from './DisasterImpactDashboard';
 import ClimateDisasterVisualizations from './ClimateDisasterVisualizations';
+import Navigation from './Navigation';
+import Hero from './Hero';
+import GlassCard from './ui/GlassCard';
+import AboutSection from './AboutSection';
+
 import { indiaTemperatureData } from '../data/temperatureData';
 import { weatherData } from '../data/weatherData';
 import { landslideData } from '../data/landslideData';
 import { glacierData } from '../data/glacierData';
 
-// Create separate chart components
+const themeColors = {
+  primary: '#38bdf8',
+  secondary: '#22d3ee',
+  accent: '#f97316',
+  grid: '#334155',
+  text: '#f1f5f9'
+};
+
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-dark-800 border border-white/10 p-4 rounded-lg shadow-xl backdrop-blur-sm">
+        <p className="text-gray-300 mb-2">{label}</p>
+        {payload.map((pld, index) => (
+          <div key={index} className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: pld.color }}></div>
+            <p className="font-bold text-white">
+              {pld.name}: {pld.value}
+            </p>
+          </div>
+        ))}
+      </div>
+    );
+  }
+  return null;
+};
+
+// Updated Charts with new theme
 const IndiaTemperatureChart = () => (
   <ResponsiveContainer width="100%" height={300}>
     <LineChart data={indiaTemperatureData}>
-      <CartesianGrid strokeDasharray="3 3" stroke="#555" />
-      <XAxis dataKey="year" stroke="#fff" />
-      <YAxis stroke="#fff" domain={[25, 27]} />
-      <Tooltip contentStyle={{ backgroundColor: '#333', border: 'none' }} />
+      <CartesianGrid strokeDasharray="3 3" stroke={themeColors.grid} />
+      <XAxis dataKey="year" stroke={themeColors.text} />
+      <YAxis stroke={themeColors.text} domain={[25, 27]} />
+      <Tooltip content={<CustomTooltip />} />
       <Legend />
-      <Line type="monotone" dataKey="temperature" stroke="#8884d8" name="Avg. Temperature (°C)" />
+      <Line type="monotone" dataKey="temperature" stroke={themeColors.primary} strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 8 }} name="Avg. Temp (°C)" />
     </LineChart>
   </ResponsiveContainer>
 );
@@ -39,12 +70,12 @@ const IndiaTemperatureChart = () => (
 const PrecipitationChart = () => (
   <ResponsiveContainer width="100%" height={300}>
     <BarChart data={weatherData}>
-      <CartesianGrid strokeDasharray="3 3" stroke="#555" />
-      <XAxis dataKey="month" stroke="#fff" />
-      <YAxis stroke="#fff" />
-      <Tooltip contentStyle={{ backgroundColor: '#333', border: 'none' }} />
+      <CartesianGrid strokeDasharray="3 3" stroke={themeColors.grid} />
+      <XAxis dataKey="month" stroke={themeColors.text} />
+      <YAxis stroke={themeColors.text} />
+      <Tooltip content={<CustomTooltip />} />
       <Legend />
-      <Bar dataKey="precipitation" fill="#82ca9d" name="Precipitation (mm)" />
+      <Bar dataKey="precipitation" fill={themeColors.secondary} radius={[4, 4, 0, 0]} name="Precipitation (mm)" />
     </BarChart>
   </ResponsiveContainer>
 );
@@ -52,12 +83,12 @@ const PrecipitationChart = () => (
 const LandslideChart = () => (
   <ResponsiveContainer width="100%" height={300}>
     <LineChart data={landslideData}>
-      <CartesianGrid strokeDasharray="3 3" stroke="#555" />
-      <XAxis dataKey="year" stroke="#fff" />
-      <YAxis stroke="#fff" />
-      <Tooltip contentStyle={{ backgroundColor: '#333', border: 'none' }} />
+      <CartesianGrid strokeDasharray="3 3" stroke={themeColors.grid} />
+      <XAxis dataKey="year" stroke={themeColors.text} />
+      <YAxis stroke={themeColors.text} />
+      <Tooltip content={<CustomTooltip />} />
       <Legend />
-      <Line type="monotone" dataKey="deaths" stroke="#ff7300" name="Deaths from Landslides" />
+      <Line type="monotone" dataKey="deaths" stroke={themeColors.accent} strokeWidth={3} name="Deaths" />
     </LineChart>
   </ResponsiveContainer>
 );
@@ -65,12 +96,12 @@ const LandslideChart = () => (
 const GlacierChart = () => (
   <ResponsiveContainer width="100%" height={300}>
     <LineChart data={glacierData}>
-      <CartesianGrid strokeDasharray="3 3" stroke="#555" />
-      <XAxis dataKey="year" stroke="#fff" />
-      <YAxis stroke="#fff" />
-      <Tooltip contentStyle={{ backgroundColor: '#333', border: 'none' }} />
+      <CartesianGrid strokeDasharray="3 3" stroke={themeColors.grid} />
+      <XAxis dataKey="year" stroke={themeColors.text} />
+      <YAxis stroke={themeColors.text} />
+      <Tooltip content={<CustomTooltip />} />
       <Legend />
-      <Line type="monotone" dataKey="area" stroke="#8884d8" name="Glacier Area (relative units)" />
+      <Line type="monotone" dataKey="area" stroke={themeColors.primary} strokeWidth={3} name="Glacier Area" />
     </LineChart>
   </ResponsiveContainer>
 );
@@ -79,49 +110,31 @@ const ThirdPoleProject = () => {
   const [activeTab, setActiveTab] = useState('home');
   const [searchTerm, setSearchTerm] = useState('');
 
-  const handleSearch = (event) => {
-    setSearchTerm(event.target.value);
-  };
   const researchItems = [
-    {
-      title: 'Extreme Weather Events',
-      image: 'url("cloud.jpg.avif")',
-    },
-    {
-      title: 'Climate Modeling and Predictions',
-      image: 'url("earth.jpg")',
-    },
-    {
-      title: 'Glacier Dynamics and Water Resources',
-      image: 'url("glacier2.jpg")',
-    },
-    {
-      title: 'Vegetation Changes and Land Use',
-      image: 'url("drought.jpeg.webp")',
-    },
-    {
-      title: 'Humanitarian Response',
-      image: 'url("floods.jpg.webp")',
-    },
-    {
-      title: "Terrestrial Water Changes",
-      image: 'url("Gangotri.jpg")',
-    },
+    { title: 'Extreme Weather Events', image: 'url("cloud.jpg.avif")' },
+    { title: 'Climate Modeling and Predictions', image: 'url("earth.jpg")' },
+    { title: 'Glacier Dynamics and Water Resources', image: 'url("glacier2.jpg")' },
+    { title: 'Vegetation Changes and Land Use', image: 'url("drought.jpeg.webp")' },
+    { title: 'Humanitarian Response', image: 'url("floods.jpg.webp")' },
+    { title: "Terrestrial Water Changes", image: 'url("Gangotri.jpg")' },
   ];
 
-  // Define a new ResearchGrid component
   const ResearchGrid = () => (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
       {researchItems.map((item, index) => (
         <div
           key={index}
-          className="bg-cover bg-center h-40 flex items-center justify-center text-white font-bold text-xl"
-          style={{
-            backgroundImage: item.image,
-          }}
+          className="group relative h-64 rounded-2xl overflow-hidden shadow-2xl cursor-pointer transform transition-all duration-500 hover:scale-105"
         >
-          <div className="bg-black bg-opacity-50 p-2 rounded">
-            {item.title}
+          <div
+            className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
+            style={{ backgroundImage: item.image }}
+          ></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-80 group-hover:opacity-90 transition-opacity"></div>
+          <div className="absolute bottom-0 left-0 p-6 w-full">
+            <h3 className="text-xl font-bold text-white font-heading leading-tight group-hover:text-primary transition-colors">
+              {item.title}
+            </h3>
           </div>
         </div>
       ))}
@@ -129,15 +142,12 @@ const ThirdPoleProject = () => {
   );
 
   const filteredBlogs = useMemo(() => {
-    // Example filtering logic for blogs
     const blogs = [
       {
         title: "Tackling Climate and Water Challenges in the Himalayas using AI",
         link: "https://www.himalayanwaterproject.org/post/tackling-climate-and-water-challenges-in-the-himalayas-using-ai?fbclid=PAAaYk42lbCAwvs7NAlLl5tlILoeEEMovhuIRWmo2vMEQ_SAjkvU59c_c5N3g_aem_AUUgE-tuc5yK5O631x1-3Q7zOoMlneCuDTH2uRJHXjU-y7wdNfTwqlPw0oN2RBTUWPc"
       },
-      // Add more blogs as needed
     ];
-
     return blogs.filter(blog => blog.title.toLowerCase().includes(searchTerm.toLowerCase()));
   }, [searchTerm]);
 
@@ -145,133 +155,96 @@ const ThirdPoleProject = () => {
     switch (activeTab) {
       case 'home':
         return (
-          <div className="p-4">
-            <h2 className="text-2xl font-bold mb-4">About Third Pole Project</h2>
-            <p className="text-gray-300 mb-4">
-              Third Pole Project is an AI-powered weather forecasting and early disaster warning system that provides highly accurate predictions for governments, militaries, enterprises, and citizens worldwide. Using advanced deep learning techniques combined with numerical weather prediction, Third Pole Project improves forecast horizons and resolution compared to conventional meteorology.
-              Our research focuses on weather across the Indian subcontinent, including extreme weather events, climate patterns, and their impacts on various sectors. Through our work, we aim to contribute to a better understanding of this crucial region and inform policy decisions for sustainable development and disaster mitigation.
-              Using the OpenBuildings dataset we aim to significantly enhance humanatarian response in the disaster prone areas.
-
-            </p>
-
-            {/* Video container */}
-            <div className="flex justify-center my-8">
-              <video
-                className="w-full max-w-md rounded-lg shadow-lg"
-                controls
-                autoPlay
-                muted
-                loop
-              >
-                <source src={import.meta.env.BASE_URL + "temporal.mp4"} type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
-            </div>
-
-            <p className="text-gray-300">
-              Our mission is to provide accurate and timely information about climate changes in the Third Pole region,
-              helping communities and policymakers make informed decisions.
-            </p>
-          </div>
+          <>
+            <Hero onExplore={() => setActiveTab('visualizations')} />
+            <AboutSection />
+          </>
         );
+
       case 'research':
         return (
-          <div className="p-4">
-            <h2 className="text-2xl font-bold mb-4">Research Themes</h2>
+          <div className="container mx-auto px-4 py-8 animate-fade-in">
+            <h2 className="text-4xl font-bold font-heading mb-8 text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">
+              Research Themes
+            </h2>
             <ResearchGrid />
           </div>
         );
 
       case 'visualizations':
         return (
-          <div className="p-4">
-            <div>
-              <h2 className="text-2xl font-bold mb-4">Disaster Impact in India (1980-2024)</h2>
-              <DisasterImpactDashboard />
-            </div>
-            <div className="mt-8">
-              <h2 className="text-2xl font-bold mb-4">Data Visualizations</h2>
+          <div className="container mx-auto px-4 py-8 space-y-12 animate-fade-in">
+            {/* Main Dashboard */}
+            <section>
+              <h2 className="text-3xl font-bold font-heading mb-6 text-white border-l-4 border-primary pl-4">
+                Disaster Impact Monitor
+              </h2>
+              <GlassCard className="p-6">
+                <DisasterImpactDashboard />
+              </GlassCard>
+            </section>
+
+            {/* Metric Grid */}
+            <section>
+              <h2 className="text-3xl font-bold font-heading mb-6 text-white border-l-4 border-secondary pl-4">
+                Climate Metrics
+              </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div>
-                  <h3 className="text-lg font-bold mb-3">Average Annual Temperature in India (2001-2023)</h3>
+                <GlassCard className="p-6">
+                  <h3 className="text-xl font-bold mb-4 text-gray-200">Annual Temperature</h3>
                   <IndiaTemperatureChart />
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold mb-3">Precipitation Levels</h3>
+                </GlassCard>
+                <GlassCard className="p-6">
+                  <h3 className="text-xl font-bold mb-4 text-gray-200">Precipitation Levels</h3>
                   <PrecipitationChart />
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold mb-3">Landslide Deaths Over Time</h3>
+                </GlassCard>
+                <GlassCard className="p-6">
+                  <h3 className="text-xl font-bold mb-4 text-gray-200">Landslide Impact</h3>
                   <LandslideChart />
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold mb-3">Glacier Retreat Over Time</h3>
+                </GlassCard>
+                <GlassCard className="p-6">
+                  <h3 className="text-xl font-bold mb-4 text-gray-200">Glacier Retreat</h3>
                   <GlacierChart />
-                </div>
+                </GlassCard>
               </div>
-            </div>
-            <div className="mt-8">
+            </section>
+
+            <section>
               <ClimateDisasterVisualizations />
-            </div>
+            </section>
           </div>
         );
+
       case 'blogs':
         return (
-          <div className="p-4">
-            <h2 className="text-2xl font-bold mb-4">Blogs</h2>
-            <ul className="list-disc list-inside">
+          <div className="container mx-auto px-4 py-8 animate-fade-in">
+            <h2 className="text-4xl font-bold font-heading mb-8">Latest Insights</h2>
+            <div className="grid gap-6">
               {filteredBlogs.map((blog, index) => (
-                <li key={index}>
-                  <a href={blog.link} className="text-blue-400 hover:underline">
-                    {blog.title}
+                <GlassCard key={index} className="p-6 hover:border-primary/50 transition-colors group">
+                  <a href={blog.link} target="_blank" rel="noopener noreferrer" className="block">
+                    <h3 className="text-xl font-bold text-white group-hover:text-primary transition-colors mb-2">
+                      {blog.title}
+                    </h3>
+                    <span className="text-sm text-gray-400">Read Article →</span>
                   </a>
-                </li>
+                </GlassCard>
               ))}
-            </ul>
+            </div>
           </div>
         );
+
       default:
         return null;
     }
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-900 text-white">
-      <header className="bg-gray-800 p-4">
-        <div className="container mx-auto flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Third Pole Project</h1>
-          <input
-            type="text"
-            placeholder="Search..."
-            className="px-2 py-1 bg-gray-700 text-white rounded"
-            onChange={handleSearch}
-          />
-        </div>
-      </header>
-      <nav className="bg-gray-700 p-4">
-        <div className="container mx-auto">
-          <ul className="flex space-x-4">
-            {['home', 'research', 'visualizations', 'blogs'].map((tab) => (
-              <li key={tab}>
-                <button
-                  className={`text-white ${activeTab === tab ? 'font-bold' : ''}`}
-                  onClick={() => setActiveTab(tab)}
-                >
-                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </nav>
-      <main className="flex-grow container mx-auto mt-8">
+    <div className="min-h-screen bg-gradient-to-b from-dark-900 to-black text-white selection:bg-primary selection:text-black font-sans">
+      <Navigation activeTab={activeTab} onTabChange={setActiveTab} />
+      <main className="min-h-screen pb-20">
         {renderContent()}
       </main>
-      <footer className="bg-gray-800 p-4 mt-8">
-        <div className="container mx-auto text-center text-gray-400">
-          © 2024 Third Pole Project. All rights reserved.
-        </div>
-      </footer>
     </div>
   );
 };
