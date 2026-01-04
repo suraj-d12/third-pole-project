@@ -230,7 +230,7 @@ const ThirdPoleProject = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-dark-900 to-black text-white selection:bg-primary selection:text-black font-sans">
+    <div className={`min-h-screen text-white selection:bg-primary selection:text-black font-sans ${activeTab === 'research' ? 'bg-transparent' : 'bg-gradient-to-b from-dark-900 to-black'}`}>
       <Navigation activeTab={activeTab} onTabChange={setActiveTab} />
       <main className="min-h-screen pb-20">
         {renderContent()}

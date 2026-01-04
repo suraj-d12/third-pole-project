@@ -153,7 +153,7 @@ const ResearchGlobe = () => {
             {FullScreenStars}
 
             {/* Content Container with Flex and Gap */}
-            <div className="relative z-10 w-full h-full flex items-center gap-12 px-8">
+            <div className="relative z-50 w-full h-full flex items-center gap-12 px-8">
 
                 {/* Left Side: Text Container - 40% */}
                 <div className="w-2/5 min-w-[320px] h-full flex items-center">
