@@ -19,7 +19,9 @@ import ClimateDisasterVisualizations from './ClimateDisasterVisualizations';
 import Navigation from './Navigation';
 import Hero from './Hero';
 import GlassCard from './ui/GlassCard';
+import ThemeCard from './ui/ThemeCard';
 import AboutSection from './AboutSection';
+import ResearchGlobe from './ResearchGlobe/ResearchGlobe';
 
 import { indiaTemperatureData } from '../data/temperatureData';
 import { weatherData } from '../data/weatherData';
@@ -120,23 +122,14 @@ const ThirdPoleProject = () => {
   ];
 
   const ResearchGrid = () => (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       {researchItems.map((item, index) => (
-        <div
+        <ThemeCard
           key={index}
-          className="group relative h-64 rounded-2xl overflow-hidden shadow-2xl cursor-pointer transform transition-all duration-500 hover:scale-105"
-        >
-          <div
-            className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-            style={{ backgroundImage: item.image }}
-          ></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-80 group-hover:opacity-90 transition-opacity"></div>
-          <div className="absolute bottom-0 left-0 p-6 w-full">
-            <h3 className="text-xl font-bold text-white font-heading leading-tight group-hover:text-primary transition-colors">
-              {item.title}
-            </h3>
-          </div>
-        </div>
+          title={item.title}
+          image={item.image}
+          onClick={() => console.log(`Clicked ${item.title}`)}
+        />
       ))}
     </div>
   );
@@ -164,10 +157,7 @@ const ThirdPoleProject = () => {
       case 'research':
         return (
           <div className="container mx-auto px-4 py-8 animate-fade-in">
-            <h2 className="text-4xl font-bold font-heading mb-8 text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">
-              Research Themes
-            </h2>
-            <ResearchGrid />
+            <ResearchGlobe />
           </div>
         );
 
