@@ -1,206 +1,120 @@
 import React, { useState, Suspense, useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { PerspectiveCamera, Stars } from '@react-three/drei';
+import { PerspectiveCamera } from '@react-three/drei';
 import { motion, AnimatePresence } from 'framer-motion';
 import Earth from './Earth';
 
-// Loading fallback component
+const THEMES = [
+    { name: 'Extreme Weather Events', region: 'Indian Subcontinent' },
+    { name: 'Climate Modeling and Predictions', region: 'Tibetan Plateau' },
+    { name: 'Glacier Dynamics and Water Resources', region: 'Everest Massif' },
+    { name: 'Vegetation Changes and Land Use', region: 'Amazon Basin' },
+    { name: 'Humanitarian Response', region: 'Nepal & Bihar' },
+    { name: 'Terrestrial Water Changes', region: 'Uttarakhand' },
+];
+
 const LoadingFallback = () => (
-    <div className="absolute inset-0 flex items-center justify-center bg-black">
+    <div className="absolute inset-0 grid place-items-center">
         <div className="text-center">
-            <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-gray-400 text-sm">Loading 3D Assets...</p>
+            <div className="w-10 h-10 border border-ink border-t-glacier rounded-full animate-spin mx-auto mb-3" />
+            <p className="font-mono text-[10px] uppercase tracking-widest text-ink-faint">Plotting terrain&hellip;</p>
         </div>
     </div>
 );
 
-// Left side theme list with Antigravity UI
-const ThemeList = ({ activeTheme, onThemeSelect }) => {
-    const themes = [
-        'Extreme Weather Events',
-        'Climate Modeling and Predictions',
-        'Glacier Dynamics and Water Resources',
-        'Vegetation Changes and Land Use',
-        'Humanitarian Response',
-        'Terrestrial Water Changes'
-    ];
-
-    return (
-        <div className="h-full flex flex-col justify-center px-8 lg:px-12">
-            <h2 className="text-4xl lg:text-5xl font-bold font-heading mb-4 text-white">
-                Research
-                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
-                    Themes
-                </span>
-            </h2>
-
-            <p className="text-gray-400 mb-10 text-sm lg:text-base max-w-md">
-                Explore our research areas across the Third Pole region. Click a theme to focus on its geographic region.
-            </p>
-
-            <div className="space-y-3 perspective-1000">
-                {themes.map((theme, index) => {
-                    const isActive = activeTheme === theme;
-
-                    return (
-                        <motion.button
-                            key={theme}
-                            onClick={() => onThemeSelect(isActive ? null : theme)}
-                            initial={{ x: -50, opacity: 0 }}
-                            animate={{
-                                x: 0,
-                                opacity: 1,
-                                scale: isActive ? 1.05 : 1,
-                                z: isActive ? 50 : 0
-                            }}
-                            whileHover={{
-                                scale: 1.02,
-                                x: 10,
-                                transition: { type: "spring", stiffness: 300 }
-                            }}
-                            transition={{
-                                delay: index * 0.1,
-                                type: "spring",
-                                stiffness: 200,
-                                damping: 20
-                            }}
-                            className={`relative group flex items-center w-full text-left py-3 px-4 rounded-xl transition-all duration-300 ${isActive
-                                ? 'bg-gradient-to-r from-primary/20 to-transparent border-l-4 border-primary shadow-[0_0_30px_rgba(56,189,248,0.2)]'
-                                : 'hover:bg-white/5 border-l-4 border-transparent hover:border-white/20'
-                                }`}
-                        >
-                            {/* Animated Background Pulse for Active State */}
-                            {isActive && (
-                                <motion.div
-                                    layoutId="activeGlow"
-                                    className="absolute inset-0 bg-primary/10 blur-xl rounded-xl -z-10"
-                                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                                />
-                            )}
-
-                            {/* Indicator */}
-                            <div className={`w-2 h-2 rounded-full mr-4 transition-all duration-300 ${isActive
-                                ? 'bg-primary shadow-[0_0_10px_#38bdf8] scale-150'
-                                : 'bg-gray-600 group-hover:bg-gray-400'
-                                }`}></div>
-
-                            <span className={`text-base lg:text-lg font-medium transition-colors duration-300 ${isActive ? 'text-white' : 'text-gray-400 group-hover:text-white'
-                                }`}>
-                                {theme}
-                            </span>
-                        </motion.button>
-                    );
-                })}
-            </div>
-
-            {/* Return to Global View */}
-            <AnimatePresence>
-                {activeTheme && (
-                    <motion.button
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 10 }}
-                        onClick={() => onThemeSelect(null)}
-                        className="mt-8 px-4 py-2 text-sm text-gray-400 hover:text-white transition-colors flex items-center gap-2 group"
-                    >
-                        <motion.span
-                            animate={{ x: [0, -4, 0] }}
-                            transition={{ repeat: Infinity, duration: 1.5 }}
-                        >
-                            ←
-                        </motion.span>
-                        Return to Global View
-                    </motion.button>
-                )}
-            </AnimatePresence>
+// Left index — cartographic table of research themes
+const ThemeIndex = ({ activeTheme, onThemeSelect }) => (
+    <div>
+        <div className="flex items-center gap-4 mb-6 font-mono text-[11px] uppercase tracking-widest text-ink-faint">
+            <span className="h-px w-8 bg-ink-faint" />
+            <span>Index of Study</span>
         </div>
-    );
-};
 
-import { createPortal } from 'react-dom';
+        <h2 className="font-display font-light text-ink text-4xl lg:text-5xl leading-[0.95] tracking-tight mb-4">
+            Research
+            <span className="block italic text-glacier">Themes</span>
+        </h2>
+        <p className="text-ink-soft text-sm leading-relaxed max-w-sm mb-8">
+            Six lines of inquiry across the Third Pole. Select a plate to survey
+            its region on the globe.
+        </p>
+
+        <ul className="border-t border-paper-deep">
+            {THEMES.map((t, i) => {
+                const isActive = activeTheme === t.name;
+                return (
+                    <li key={t.name} className="border-b border-paper-deep">
+                        <button
+                            onClick={() => onThemeSelect(isActive ? null : t.name)}
+                            className="group w-full text-left py-4 flex items-baseline gap-4 transition-colors"
+                        >
+                            <span className={`font-mono text-xs tabular-nums transition-colors ${isActive ? 'text-glacier' : 'text-ink-faint group-hover:text-ink'}`}>
+                                {String(i + 1).padStart(2, '0')}
+                            </span>
+                            <span className="flex-1">
+                                <span className={`block font-display text-lg leading-snug transition-colors ${isActive ? 'text-glacier' : 'text-ink group-hover:text-glacier'}`}>
+                                    {t.name}
+                                </span>
+                                <span className="block font-mono text-[10px] uppercase tracking-widest text-ink-faint mt-0.5">
+                                    {t.region}
+                                </span>
+                            </span>
+                            <span className={`self-center transition-all duration-300 ${isActive ? 'text-glacier translate-x-0 opacity-100' : 'text-ink-faint -translate-x-1 opacity-0 group-hover:opacity-100 group-hover:translate-x-0'}`}>
+                                &rarr;
+                            </span>
+                        </button>
+                    </li>
+                );
+            })}
+        </ul>
+
+        <AnimatePresence>
+            {activeTheme && (
+                <motion.button
+                    initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                    onClick={() => onThemeSelect(null)}
+                    className="mt-6 font-mono text-[11px] uppercase tracking-widest text-ink-soft hover:text-glacier transition-colors flex items-center gap-2"
+                >
+                    <span>&larr;</span> Return to global view
+                </motion.button>
+            )}
+        </AnimatePresence>
+    </div>
+);
 
 const ResearchGlobe = () => {
     const [activeTheme, setActiveTheme] = useState(null);
     const cameraControlsRef = useRef();
 
-    // Render stars into the body to ensure full-screen coverage regardless of parent containers
-    const FullScreenStars = createPortal(
-        <div className="fixed inset-0 w-screen h-screen pointer-events-none -z-50 bg-black">
-            <Canvas
-                gl={{ antialias: false, alpha: false }} // Alpha false for solid black background
-                style={{ background: '#000000', width: '100%', height: '100%' }}
-                camera={{ position: [0, 0, 1] }} // Simple camera for stars
-            >
-                <Stars
-                    radius={300}
-                    depth={50}
-                    count={5000} // Reduced for performance
-                    factor={4}
-                    saturation={0}
-                    fade
-                    speed={0.5}
-                />
-            </Canvas>
-        </div>,
-        document.body
-    );
-
     return (
-        // Removed borders, backgrounds, and fixed height constraint to integrate with page
-        <div className="relative w-full h-[85vh] min-h-[600px] flex items-center">
+        <div className="relative w-full grid lg:grid-cols-[minmax(320px,2fr)_3fr] gap-8 lg:gap-12 items-center">
+            {/* Left: index */}
+            <div className="order-2 lg:order-1">
+                <ThemeIndex activeTheme={activeTheme} onThemeSelect={setActiveTheme} />
+            </div>
 
-            {/* Inject the Full Screen Stars */}
-            {FullScreenStars}
+            {/* Right: globe plate */}
+            <div className="order-1 lg:order-2 relative">
+                <div className="relative aspect-square w-full max-w-[620px] mx-auto">
+                    {/* Plate backdrop: soft glacier vignette + hairline frame */}
+                    <div className="absolute inset-0 rounded-full"
+                        style={{ background: 'radial-gradient(circle at 50% 45%, rgba(31,95,139,0.12), rgba(31,95,139,0) 62%)' }} />
+                    <div className="pointer-events-none absolute inset-[6%] rounded-full border border-paper-deep" />
+                    <div className="pointer-events-none absolute inset-0 rounded-full border border-glacier/20" />
 
-            {/* Content Container with Flex and Gap */}
-            <div className="relative z-50 w-full h-full flex items-center gap-12 px-8">
-
-                {/* Left Side: Text Container - 40% */}
-                <div className="w-2/5 min-w-[320px] h-full flex items-center">
-                    <div className="w-full">
-                        <ThemeList activeTheme={activeTheme} onThemeSelect={setActiveTheme} />
-                    </div>
-                </div>
-
-                {/* Right Side: 3D Canvas - 60% */}
-                <div className="flex-1 h-full">
                     <Suspense fallback={<LoadingFallback />}>
-                        <Canvas
-                            gl={{ antialias: true, alpha: true }}
-                            dpr={[1, 2]}
-                            style={{ background: 'transparent' }}
-                        >
-                            {/* Initial Camera Position */}
-                            <PerspectiveCamera
-                                makeDefault
-                                position={[0, 0, 3.5]}
-                                fov={45}
-                                near={0.1}
-                                far={1000}
-                            />
-
-                            {/* Cinematic Lighting */}
-                            <ambientLight intensity={0.15} />
-                            <directionalLight
-                                position={[5, 3, 5]}
-                                intensity={1.8}
-                                color="#ffffff"
-                            />
-                            <directionalLight
-                                position={[-5, -3, -5]}
-                                intensity={0.3}
-                                color="#38bdf8"
-                            />
-                            <pointLight
-                                position={[10, 0, 10]}
-                                intensity={0.5}
-                                color="#0ea5e9"
-                            />
-
-                            {/* The Earth with Camera Controls */}
+                        <Canvas gl={{ antialias: true, alpha: true }} dpr={[1, 2]} style={{ background: 'transparent' }}>
+                            <PerspectiveCamera makeDefault position={[0, 0, 3.5]} fov={45} near={0.1} far={1000} />
+                            <ambientLight intensity={0.6} />
                             <Earth activeTheme={activeTheme} cameraControlsRef={cameraControlsRef} />
                         </Canvas>
                     </Suspense>
+
+                    {/* Corner caption — below the plate */}
+                    <div className="absolute -bottom-8 inset-x-0 flex justify-between font-mono text-[10px] uppercase tracking-widest text-ink-faint">
+                        <span>Fig. 01 &mdash; Regional Overview</span>
+                        <span>Drag to rotate</span>
+                    </div>
                 </div>
             </div>
         </div>

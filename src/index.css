@@ -2,32 +2,87 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  margin: 0;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: #0f172a;
+:root {
+  --paper: #f4f1ea;
+  --ink: #1a2230;
+  --glacier: #1f5f8b;
 }
 
-/* Custom Scrollbar */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background-color: var(--paper);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: 'Inter', system-ui, sans-serif;
+  /* Faint topographic contour wash + paper grain, printed-atlas feel */
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  background-attachment: fixed;
+}
+
+/* Reusable topographic contour backdrop (applied to hero / plate sections) */
+.topo-lines {
+  background-image:
+    repeating-radial-gradient(circle at 30% 40%,
+      transparent 0,
+      transparent 46px,
+      rgba(31, 95, 139, 0.06) 47px,
+      rgba(31, 95, 139, 0.06) 48px,
+      transparent 49px);
+}
+
+/* Thin hairline rule used as a cartographic divider */
+.hairline {
+  border-color: #ded5c3;
+}
+
+/* ── Selection ── */
+::selection {
+  background: #1f5f8b;
+  color: #f4f1ea;
+}
+
+/* ── Scrollbar (parchment) ── */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0f172a;
+  background: #eae4d8;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #334155;
-  border-radius: 4px;
+  background: #c9bfa9;
+  border-radius: 0;
+  border: 2px solid #eae4d8;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+  background: #1f5f8b;
 }
 
-/* Animations */
+/* ── Legacy helpers (still referenced by data/blog pages) ── */
+.animate-fade-in-up {
+  animation: fadeInUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-fade-in {
+  animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.delay-100 {
+  animation-delay: 100ms;
+}
+
+.delay-200 {
+  animation-delay: 200ms;
+}
+
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -38,20 +93,4 @@ body {
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-.animate-fade-in-up {
-  animation: fadeInUp 0.8s ease-out forwards;
-}
-
-.animate-fade-in {
-  animation: fadeInUp 0.5s ease-out forwards;
-}
-
-.delay-100 {
-  animation-delay: 100ms;
-}
-
-.delay-200 {
-  animation-delay: 200ms;
 }
