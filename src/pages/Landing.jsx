@@ -6,14 +6,6 @@ import ThemeJourney from '../components/ResearchGlobe/ThemeJourney';
 
 const ease = [0.16, 1, 0.3, 1];
 
-const SectionLabel = ({ index, children }) => (
-    <div className="flex items-center gap-4 mb-6 font-mono text-[11px] uppercase tracking-widest text-ink-faint">
-        <span className="text-glacier">{index}</span>
-        <span className="h-px w-8 bg-ink-faint" />
-        <span>{children}</span>
-    </div>
-);
-
 const stats = [
     { k: '46,000', l: 'Himalayan glaciers surveyed' },
     { k: '1.9 bn', l: 'People fed by its rivers' },
@@ -26,13 +18,13 @@ const Landing = () => {
         <main>
             <Hero />
 
-            {/* ── Scroll-driven theme journey ── */}
+            {/* Research themes with the globe */}
             <ThemeJourney />
 
-            {/* ── Mission / about strip ── */}
-            <section id="mission" className="relative border-t border-paper-deep bg-paper-dim scroll-mt-16">
+            {/* About */}
+            <section id="about" className="relative border-t border-paper-deep bg-paper-dim scroll-mt-16">
                 <div className="mx-auto max-w-7xl px-8 sm:px-14 py-24 lg:py-32">
-                    <SectionLabel index="§ 02">The Mission</SectionLabel>
+                    <p className="font-mono text-[11px] uppercase tracking-widest text-ink-faint mb-6">About the project</p>
                     <div className="grid lg:grid-cols-[1.3fr_1fr] gap-14 lg:gap-24 items-start">
                         <motion.div
                             initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }}
@@ -50,7 +42,7 @@ const Landing = () => {
                                 </p>
                                 <p>
                                     Using the OpenBuildings dataset, our early-warning models translate
-                                    climate signals into actionable response for the region's most
+                                    climate signals into actionable response for the region&rsquo;s most
                                     disaster-exposed districts.
                                 </p>
                             </div>
@@ -62,11 +54,8 @@ const Landing = () => {
                             </blockquote>
                         </motion.div>
 
-                        {/* Field readings */}
                         <div className="lg:border-l lg:border-paper-deep lg:pl-12">
-                            <p className="font-mono text-[10px] uppercase tracking-widest text-ink-faint mb-6">
-                                Field Readings
-                            </p>
+                            <p className="font-mono text-[10px] uppercase tracking-widest text-ink-faint mb-6">At a glance</p>
                             <dl className="divide-y divide-paper-deep">
                                 {stats.map((s) => (
                                     <div key={s.l} className="py-5">
@@ -80,22 +69,20 @@ const Landing = () => {
                 </div>
             </section>
 
-            {/* ── Directory CTA ── */}
+            {/* Where next */}
             <section className="border-t border-paper-deep">
                 <div className="mx-auto max-w-7xl px-8 sm:px-14 py-20 grid md:grid-cols-2 gap-px bg-paper-deep">
                     <Link to="/data" className="group bg-paper hover:bg-paper-dim transition-colors p-10">
-                        <span className="font-mono text-[11px] uppercase tracking-widest text-ink-faint">Plate II</span>
-                        <h3 className="mt-3 font-display text-3xl text-ink group-hover:text-glacier transition-colors">
-                            Impact Data &rarr;
+                        <h3 className="font-display text-3xl text-ink group-hover:text-glacier transition-colors">
+                            Explore the data &rarr;
                         </h3>
-                        <p className="mt-2 text-ink-soft">Disaster losses, temperature, precipitation and glacier retreat.</p>
+                        <p className="mt-2 text-ink-soft">Disaster losses, temperature, precipitation and glacier retreat, 1980&ndash;2024.</p>
                     </Link>
                     <Link to="/blog" className="group bg-paper hover:bg-paper-dim transition-colors p-10">
-                        <span className="font-mono text-[11px] uppercase tracking-widest text-ink-faint">Plate III</span>
-                        <h3 className="mt-3 font-display text-3xl text-ink group-hover:text-glacier transition-colors">
-                            Field Notes &rarr;
+                        <h3 className="font-display text-3xl text-ink group-hover:text-glacier transition-colors">
+                            Read our writing &rarr;
                         </h3>
-                        <p className="mt-2 text-ink-soft">Research writing from the roof of the world.</p>
+                        <p className="mt-2 text-ink-soft">Notes on climate, water and AI from the project team.</p>
                     </Link>
                 </div>
             </section>

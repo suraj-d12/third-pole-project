@@ -15,16 +15,14 @@ const BlogPage = () => (
     <main className="pt-24 pb-24 min-h-screen">
         <div className="mx-auto max-w-4xl px-8 sm:px-14">
             <header className="mb-14 border-b border-paper-deep pb-8">
-                <div className="flex items-center gap-4 mb-5 font-mono text-[11px] uppercase tracking-widest text-ink-faint">
-                    <span className="text-glacier">Plate III</span>
-                    <span className="h-px w-8 bg-ink-faint" />
-                    <span>Field Notes</span>
-                </div>
+                <p className="font-mono text-[11px] uppercase tracking-widest text-ink-faint mb-5">
+                    From the project team
+                </p>
                 <h1 className="font-display font-light text-ink text-5xl md:text-7xl leading-[0.95] tracking-tight">
-                    From the <span className="italic text-glacier">field</span>
+                    <span className="italic text-glacier">Writing</span>
                 </h1>
                 <p className="mt-5 max-w-xl text-ink-soft text-lg leading-relaxed">
-                    Writing and dispatches on climate, water and AI across the Third Pole.
+                    Notes on climate, water and AI across the Third Pole.
                 </p>
             </header>
 
@@ -48,7 +46,7 @@ const BlogPage = () => (
                                 {n.title}
                             </h2>
                             <span className="mt-4 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest text-ink-soft group-hover:text-glacier transition-colors">
-                                Read dispatch <span className="transition-transform group-hover:translate-x-1">&rarr;</span>
+                                Read article <span className="transition-transform group-hover:translate-x-1">&rarr;</span>
                             </span>
                         </a>
                     </motion.li>

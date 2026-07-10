@@ -2,10 +2,12 @@ import React, { useRef, useEffect, useMemo } from 'react';
 import { useFrame, useLoader } from '@react-three/fiber';
 import { TextureLoader } from 'three';
 import * as THREE from 'three';
-import { CameraControls, Html } from '@react-three/drei';
-import { motion } from 'framer-motion';
+import { CameraControls } from '@react-three/drei';
+import CameraControlsImpl from 'camera-controls';
 
-// ── GEOGRAPHY ──────────────────────────────────────────────
+const { ACTION } = CameraControlsImpl;
+
+// ── RESEARCH THEMES ────────────────────────────────────────
 export const THEME_ORDER = [
     'Extreme Weather Events',
     'Climate Modeling and Predictions',
@@ -16,12 +18,12 @@ export const THEME_ORDER = [
 ];
 
 export const themeCoordinates = {
-    'Extreme Weather Events': { lat: 18, long: 84, zoom: 2.7, label: 'Bay of Bengal', region: 'Indian Subcontinent', fig: 'Fig. 02', description: 'Cyclone genesis and intensity tracked across the monsoon belt.' },
-    'Climate Modeling and Predictions': { lat: 32, long: 88, zoom: 2.9, label: 'Tibetan Plateau', region: 'High Asia', fig: 'Fig. 03', description: 'Temperature isolines model warming across high-altitude zones.' },
-    'Glacier Dynamics and Water Resources': { lat: 28, long: 86.9, zoom: 2.5, label: 'Everest Massif', region: 'Khumbu', fig: 'Fig. 04', description: 'Mass-balance monitoring of a rapidly retreating cryosphere.' },
-    'Vegetation Changes and Land Use': { lat: -3, long: -60, zoom: 3.0, label: 'Amazon Basin', region: 'South America', fig: 'Fig. 05', description: 'LIDAR canopy-density scanning tracks forest cover loss.' },
-    'Humanitarian Response': { lat: 26.5, long: 85.5, zoom: 2.6, label: 'Nepal & Bihar', region: 'Gangetic Plain', fig: 'Fig. 06', description: 'Relief corridors linking flood-exposed districts in real time.' },
-    'Terrestrial Water Changes': { lat: 29, long: 79, zoom: 2.7, label: 'Uttarakhand', region: 'Ganga Headwaters', fig: 'Fig. 07', description: 'Subsurface water-table and recharge modelling along the headwaters.' },
+    'Extreme Weather Events': { lat: 18, long: 84, zoom: 2.7, label: 'Bay of Bengal', region: 'Indian Subcontinent', description: 'Cyclone genesis and intensity tracked across the monsoon belt, from formation at sea to landfall.' },
+    'Climate Modeling and Predictions': { lat: 32, long: 88, zoom: 2.9, label: 'Tibetan Plateau', region: 'High Asia', description: 'Deep-learning models sharpen temperature and warming forecasts across high-altitude zones.' },
+    'Glacier Dynamics and Water Resources': { lat: 28, long: 86.9, zoom: 2.5, label: 'Everest region', region: 'Khumbu Himal', description: 'Mass-balance monitoring of a rapidly retreating cryosphere — the water tower of Asia.' },
+    'Vegetation Changes and Land Use': { lat: -3, long: -60, zoom: 3.0, label: 'Amazon Basin', region: 'South America', description: 'LIDAR canopy scanning tracks forest-cover change and its feedback on regional climate.' },
+    'Humanitarian Response': { lat: 26.5, long: 85.5, zoom: 2.6, label: 'Nepal & Bihar', region: 'Gangetic Plain', description: 'Building-level exposure maps link early warnings to relief corridors in flood-prone districts.' },
+    'Terrestrial Water Changes': { lat: 29, long: 79, zoom: 2.7, label: 'Uttarakhand', region: 'Ganga headwaters', description: 'Subsurface water-table and recharge modelling along the headwaters of the Ganga.' },
 };
 
 const cityCoordinates = [
@@ -32,14 +34,13 @@ const cityCoordinates = [
     { lat: 26.4, long: 80.3, name: 'Kanpur' },
 ];
 
-const globalView = { lat: 20, long: 78, zoom: 3.6 };
+const globalView = { lat: 24, long: 82, zoom: 3.1 };
 
-// palette
+// palette — the globe is printed in the page's own inks
 const GLACIER = new THREE.Color('#1f5f8b');
-const GLACIER_LIGHT = new THREE.Color('#7fb2d0');
 const TERRACOTTA = new THREE.Color('#b5462f');
 const SAGE = new THREE.Color('#5f7d5a');
-const ICE = new THREE.Color('#eaf3f8');
+const ICE = new THREE.Color('#f3f8fb');
 
 const latLongToPosition = (lat, long, radius) => {
     const phi = (90 - lat) * (Math.PI / 180);
@@ -51,29 +52,6 @@ const latLongToPosition = (lat, long, radius) => {
     );
 };
 const latLongToUV = (lat, long) => ({ u: (long + 180) / 360, v: (lat + 90) / 180 });
-
-// ── INFO PLATE ─────────────────────────────────────────────
-const InfoPopup = ({ position, data }) => {
-    if (!data) return null;
-    return (
-        <Html position={[position.x * 1.28, position.y * 1.28, position.z * 1.28]} center
-            style={{ width: '250px', pointerEvents: 'none' }} zIndexRange={[40, 0]}>
-            <motion.div
-                initial={{ opacity: 0, y: 14, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ type: 'spring', stiffness: 220, damping: 24 }}
-                className="w-[250px] bg-paper/95 backdrop-blur-sm border border-ink shadow-plate text-left">
-                <div className="flex items-center justify-between px-4 pt-3 font-mono text-[10px] uppercase tracking-widest text-ink-faint">
-                    <span>{data.fig}</span><span className="text-glacier">&#9679; live</span>
-                </div>
-                <div className="px-4 pb-4 pt-1">
-                    <h3 className="font-display text-lg text-ink leading-tight">{data.label}</h3>
-                    <div className="h-px w-10 bg-glacier my-2" />
-                    <p className="text-ink-soft text-[12.5px] leading-relaxed">{data.description}</p>
-                </div>
-            </motion.div>
-        </Html>
-    );
-};
 
 const LocationMarker = ({ position, color = GLACIER }) => {
     const ring = useRef();
@@ -109,7 +87,7 @@ const OverlaySphere = React.forwardRef(({ scale = 1.015, children }, ref) => (
     </mesh>
 ));
 
-// 1 · WEATHER — logarithmic-spiral cyclone with eye + flicker (terracotta)
+// 1 · WEATHER — logarithmic-spiral cyclone with eye (terracotta)
 const CycloneOverlay = ({ active }) => {
     const ref = useTime(active);
     const c = latLongToUV(18, 84);
@@ -126,21 +104,19 @@ const CycloneOverlay = ({ active }) => {
                         float r = length(d);
                         float a = atan(d.y, d.x);
                         float disk = smoothstep(0.16, 0.02, r);
-                        // spiral arms: angle offset by log radius, rotating
                         float arms = sin(a * 2.0 + log(r + 0.02) * 9.0 - time * 2.2);
                         float band = smoothstep(0.2, 0.9, arms);
-                        float eye = smoothstep(0.018, 0.03, r);            // clear eye
+                        float eye = smoothstep(0.018, 0.03, r);
                         float flick = 0.85 + 0.15 * sin(time * 20.0 + r * 30.0);
                         vec3 color = mix(ice, col, band);
-                        float alpha = disk * eye * (0.28 + band * 0.5) * flick;
-                        gl_FragColor = vec4(color, alpha);
+                        gl_FragColor = vec4(color, disk * eye * (0.28 + band * 0.5) * flick);
                     }`}
             />
         </OverlaySphere>
     );
 };
 
-// 2 · CLIMATE — flowing warming isolines + breathing bloom (glacier→terracotta)
+// 2 · CLIMATE — flowing warming isolines (glacier→terracotta)
 const IsolineOverlay = ({ active }) => {
     const ref = useTime(active);
     const c = latLongToUV(32, 88);
@@ -157,7 +133,7 @@ const IsolineOverlay = ({ active }) => {
                         float area = smoothstep(0.24, 0.05, dist);
                         float flow = sin(dist * 150.0 - time * 2.5);
                         float lines = smoothstep(0.82, 0.99, flow);
-                        float bloom = area * (0.5 + 0.5 * sin(time * 1.2)) * 0.18;
+                        float bloom = area * (0.5 + 0.5 * sin(time * 1.2)) * 0.15;
                         vec3 color = mix(cool, hot, smoothstep(0.02, 0.16, dist));
                         gl_FragColor = vec4(color, area * lines * 0.9 + bloom);
                     }`}
@@ -166,7 +142,7 @@ const IsolineOverlay = ({ active }) => {
     );
 };
 
-// 3 · GLACIER — shimmering retreating ice field + monitoring ring (ice/glacier)
+// 3 · GLACIER — shimmering retreating ice field + monitoring ring
 const IceFieldOverlay = ({ active }) => {
     const ref = useTime(active);
     const c = latLongToUV(28, 86.9);
@@ -178,22 +154,18 @@ const IceFieldOverlay = ({ active }) => {
                 vertexShader={overlayVertex}
                 fragmentShader={`
                     uniform float time; uniform vec2 centerUV; uniform vec3 ice; uniform vec3 edge; varying vec2 vUv;
-                    // cheap value noise
                     float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7))) * 43758.5453); }
                     float noise(vec2 p){ vec2 i=floor(p),f=fract(p); f=f*f*(3.0-2.0*f);
                         return mix(mix(hash(i),hash(i+vec2(1,0)),f.x),mix(hash(i+vec2(0,1)),hash(i+vec2(1,1)),f.x),f.y); }
                     void main(){
                         float dist = distance(vUv, centerUV);
-                        // retreating edge: radius shrinks with a slow breath
                         float rad = 0.05 + 0.006 * sin(time * 0.6);
                         float field = smoothstep(rad, rad - 0.03, dist);
-                        float sparkle = noise(vUv * 140.0 + time * 0.8);
-                        sparkle = smoothstep(0.82, 1.0, sparkle);
+                        float sparkle = smoothstep(0.82, 1.0, noise(vUv * 140.0 + time * 0.8));
                         float ring = smoothstep(rad - 0.004, rad, dist) * (1.0 - smoothstep(rad, rad + 0.004, dist));
                         float pulse = 0.5 + 0.5 * sin(time * 3.0);
                         vec3 color = mix(edge, ice, field);
-                        float alpha = field * 0.22 + sparkle * field * 0.7 + ring * (0.6 + pulse * 0.8);
-                        gl_FragColor = vec4(color, alpha);
+                        gl_FragColor = vec4(color, field * 0.3 + sparkle * field * 0.7 + ring * (0.6 + pulse * 0.8));
                     }`}
             />
         </OverlaySphere>
@@ -208,7 +180,7 @@ const CanopyOverlay = ({ active }) => {
     return (
         <OverlaySphere ref={ref} scale={1.016}>
             <shaderMaterial transparent depthWrite={false}
-                uniforms={{ time: { value: 0 }, centerUV: { value: new THREE.Vector2(c.u, c.v) }, col: { value: SAGE }, hi: { value: new THREE.Color('#b9d98f') } }}
+                uniforms={{ time: { value: 0 }, centerUV: { value: new THREE.Vector2(c.u, c.v) }, col: { value: SAGE }, hi: { value: new THREE.Color('#8fae5f') } }}
                 vertexShader={overlayVertex}
                 fragmentShader={`
                     uniform float time; uniform vec2 centerUV; uniform vec3 col; uniform vec3 hi; varying vec2 vUv;
@@ -227,7 +199,7 @@ const CanopyOverlay = ({ active }) => {
     );
 };
 
-// 5 · HUMANITARIAN — travelling relief arcs between districts (glacier)
+// 5 · HUMANITARIAN — travelling relief arcs, terracotta district nodes
 const ReliefArcs = ({ active }) => {
     const matRefs = useRef([]);
     const arcs = useMemo(() => {
@@ -247,7 +219,7 @@ const ReliefArcs = ({ active }) => {
                 <group key={i}>
                     <mesh geometry={a.geo}>
                         <shaderMaterial ref={(m) => (matRefs.current[i] = m)} transparent depthWrite={false}
-                            uniforms={{ time: { value: i * 0.4 }, col: { value: GLACIER_LIGHT } }}
+                            uniforms={{ time: { value: i * 0.4 }, col: { value: GLACIER } }}
                             vertexShader={`varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`}
                             fragmentShader={`
                                 uniform float time; uniform vec3 col; varying vec2 vUv;
@@ -256,13 +228,13 @@ const ReliefArcs = ({ active }) => {
                                     float d = mod(vUv.x - head + 1.0, 1.0);
                                     float pulse = exp(-d * d * 60.0) + exp(-(1.0-d)*(1.0-d)*60.0);
                                     float ends = smoothstep(0.0,0.05,vUv.x) * smoothstep(1.0,0.95,vUv.x);
-                                    gl_FragColor = vec4(col, (0.28 + pulse) * ends);
+                                    gl_FragColor = vec4(col, (0.3 + pulse) * ends);
                                 }`}
                         />
                     </mesh>
                     <mesh position={a.end}>
                         <sphereGeometry args={[0.012, 12, 12]} />
-                        <meshBasicMaterial color={GLACIER_LIGHT} toneMapped={false} />
+                        <meshBasicMaterial color={TERRACOTTA} toneMapped={false} />
                     </mesh>
                 </group>
             ))}
@@ -295,27 +267,32 @@ const AquiferOverlay = ({ active }) => {
     );
 };
 
-// soft glacier rim (normal-blended so it reads on paper)
-const Atmosphere = () => (
-    <mesh scale={[1.14, 1.14, 1.14]}>
+// faint glacier halo so the sphere sits *in* the page, not on it
+const Halo = () => (
+    <mesh scale={[1.1, 1.1, 1.1]}>
         <sphereGeometry args={[1, 64, 64]} />
         <shaderMaterial transparent depthWrite={false} side={THREE.BackSide}
             uniforms={{ glowColor: { value: GLACIER } }}
             vertexShader={`varying vec3 vN; varying vec3 vP; void main(){ vN = normalize(normalMatrix*normal); vP = normalize((modelViewMatrix*vec4(position,1.0)).xyz); gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.0); }`}
-            fragmentShader={`uniform vec3 glowColor; varying vec3 vN; varying vec3 vP; void main(){ float i = pow(0.7 - dot(vN,vP), 3.0); gl_FragColor = vec4(glowColor, clamp(i,0.0,1.0) * 0.5); }`}
+            fragmentShader={`uniform vec3 glowColor; varying vec3 vN; varying vec3 vP; void main(){ float i = pow(0.66 - dot(vN,vP), 3.5); gl_FragColor = vec4(glowColor, clamp(i,0.0,1.0) * 0.3); }`}
         />
     </mesh>
 );
 
-// ── RELIEF PLANET (displacement + hillshade duotone) ───────
-const ReliefPlanet = ({ dayMap, waterMask, bumpMap }) => {
+// ── ENGRAVED PLANET ────────────────────────────────────────
+// Printed in the page's own inks: paper oceans, tan→ink relief land,
+// engraved coastlines, faint graticule. Terrain is displaced + hillshaded.
+const EngravedPlanet = ({ dayMap, waterMask, bumpMap }) => {
     const uniforms = useMemo(() => ({
         dayMap: { value: dayMap }, waterMask: { value: waterMask }, bumpMap: { value: bumpMap },
         disp: { value: 0.035 },
         lightDir: { value: new THREE.Vector3(0.9, 0.6, 0.75).normalize() },
-        oceanShallow: { value: new THREE.Color('#c3dae8') }, oceanDeep: { value: new THREE.Color('#1f5f8b') },
-        landLow: { value: new THREE.Color('#ddcca6') }, landHigh: { value: new THREE.Color('#20303f') },
-        gridColor: { value: new THREE.Color('#12303f') },
+        oceanShallow: { value: new THREE.Color('#efe9db') },
+        oceanDeep: { value: new THREE.Color('#ddd3bf') },
+        landLow: { value: new THREE.Color('#c9b892') },
+        landHigh: { value: new THREE.Color('#243447') },
+        coastInk: { value: new THREE.Color('#1a2230') },
+        gridColor: { value: new THREE.Color('#1f5f8b') },
     }), [dayMap, waterMask, bumpMap]);
 
     return (
@@ -334,7 +311,7 @@ const ReliefPlanet = ({ dayMap, waterMask, bumpMap }) => {
                     }`}
                 fragmentShader={`
                     uniform sampler2D dayMap, waterMask, bumpMap;
-                    uniform vec3 lightDir, oceanShallow, oceanDeep, landLow, landHigh, gridColor;
+                    uniform vec3 lightDir, oceanShallow, oceanDeep, landLow, landHigh, coastInk, gridColor;
                     varying vec2 vUv; varying vec3 vNormalW;
                     void main(){
                         float water = texture2D(waterMask, vUv).r;
@@ -348,20 +325,27 @@ const ReliefPlanet = ({ dayMap, waterMask, bumpMap }) => {
                         vec3 sn = normalize(vec3((elev-ex)*8.0, (elev-ey)*8.0, 1.0));
                         float hill = clamp(dot(sn, normalize(vec3(0.6,0.5,0.6))), 0.0, 1.0);
 
+                        // soft global light — keep the far side readable on paper
                         float ndl = clamp(dot(normalize(vNormalW), normalize(lightDir)), 0.0, 1.0);
-                        float shade = 0.42 + 0.58 * ndl;
+                        float shade = 0.6 + 0.4 * ndl;
 
                         vec3 ocean = mix(oceanDeep, oceanShallow, shade);
-                        vec3 land  = mix(landLow, landHigh, clamp(elev*1.25 + lum*0.15, 0.0, 1.0));
-                        land = mix(land * 0.7, land, 0.4 + 0.6 * hill);   // relief shading
-                        land = mix(land * 0.8, land, shade);
+                        vec3 land  = mix(landLow, landHigh, clamp(elev*1.3 + lum*0.12, 0.0, 1.0));
+                        land = mix(land * 0.72, land, 0.4 + 0.6 * hill);
+                        land = mix(land * 0.88, land, shade);
 
-                        vec3 base = mix(land, ocean, smoothstep(0.35, 0.62, water));
+                        float w = smoothstep(0.35, 0.62, water);
+                        vec3 base = mix(land, ocean, w);
 
+                        // engraved coastline where the water mask transitions
+                        float coast = (1.0 - smoothstep(0.0, 0.16, abs(water - 0.5)));
+                        base = mix(base, coastInk, coast * 0.45);
+
+                        // faint printed graticule
                         float lon = min(fract(vUv.x*24.0), 1.0-fract(vUv.x*24.0));
                         float lat = min(fract(vUv.y*12.0), 1.0-fract(vUv.y*12.0));
                         float grat = (1.0-smoothstep(0.0,0.012,lon)) + (1.0-smoothstep(0.0,0.012,lat));
-                        base = mix(base, gridColor, clamp(grat,0.0,1.0) * 0.09);
+                        base = mix(base, gridColor, clamp(grat,0.0,1.0) * 0.07);
 
                         gl_FragColor = vec4(base, 1.0);
                     }`}
@@ -371,28 +355,32 @@ const ReliefPlanet = ({ dayMap, waterMask, bumpMap }) => {
 };
 
 // ── CAMERA + ASSEMBLY ──────────────────────────────────────
-const CameraController = ({ activeTheme, cameraControlsRef }) => {
+const CameraController = ({ activeTheme, cameraControlsRef, focalOffset }) => {
     useEffect(() => {
         let raf, timer;
         // CameraControls resets to the camera's default transform on its first
         // frame, so a synchronous setLookAt at mount gets clobbered. Defer past
         // that init frame (and re-apply once as a safety net for slow mounts).
-        const apply = (transition) => {
+        const apply = () => {
             const ctrl = cameraControlsRef.current;
-            if (!ctrl) { raf = requestAnimationFrame(() => apply(transition)); return; }
+            if (!ctrl) { raf = requestAnimationFrame(apply); return; }
             const t = activeTheme ? themeCoordinates[activeTheme] : globalView;
-            if (!t) return;
-            const p = latLongToPosition(t.lat, t.long, t.zoom);
-            ctrl.setLookAt(p.x, p.y, p.z, 0, 0, 0, transition);
+            if (t) {
+                const p = latLongToPosition(t.lat, t.long, t.zoom);
+                ctrl.setLookAt(p.x, p.y, p.z, 0, 0, 0, true);
+            }
+            // Screen-space shift so text can own the other side. Applied here
+            // (not a separate effect) so it also survives the mount race.
+            if (focalOffset) ctrl.setFocalOffset(focalOffset[0], focalOffset[1], 0, true);
         };
-        raf = requestAnimationFrame(() => apply(true));
-        timer = setTimeout(() => apply(true), 200);
+        raf = requestAnimationFrame(apply);
+        timer = setTimeout(apply, 200);
         return () => { cancelAnimationFrame(raf); clearTimeout(timer); };
-    }, [activeTheme, cameraControlsRef]);
+    }, [activeTheme, focalOffset, cameraControlsRef]);
     return null;
 };
 
-const Earth = ({ activeTheme, cameraControlsRef, interactive = true, showPopup = true }) => {
+const Earth = ({ activeTheme, cameraControlsRef, focalOffset }) => {
     const planetRef = useRef();
     const [dayMap, bumpMap, waterMask] = useLoader(TextureLoader, [
         'https://unpkg.com/three-globe@2.31.1/example/img/earth-blue-marble.jpg',
@@ -410,13 +398,17 @@ const Earth = ({ activeTheme, cameraControlsRef, interactive = true, showPopup =
 
     return (
         <>
-            <CameraControls ref={cameraControlsRef} makeDefault smoothTime={0.9} draggingSmoothTime={0.5}
-                minDistance={1.6} maxDistance={6} dollySpeed={0.3} truckSpeed={0.3}
-                enabled={interactive} />
-            <CameraController activeTheme={activeTheme} cameraControlsRef={cameraControlsRef} />
+            {/* Drag rotates the globe; wheel and touch-drag stay with the page so
+                scrolling is never hijacked. (Don't use enabled=false to disable
+                input — that also freezes the update loop and kills setLookAt flights.) */}
+            <CameraControls ref={cameraControlsRef} makeDefault smoothTime={0.9}
+                minDistance={1.6} maxDistance={6} azimuthRotateSpeed={0.6} polarRotateSpeed={0.6}
+                mouseButtons={{ left: ACTION.ROTATE, middle: ACTION.NONE, right: ACTION.NONE, wheel: ACTION.NONE }}
+                touches={{ one: ACTION.NONE, two: ACTION.TOUCH_ROTATE, three: ACTION.NONE }} />
+            <CameraController activeTheme={activeTheme} cameraControlsRef={cameraControlsRef} focalOffset={focalOffset} />
 
             <group ref={planetRef}>
-                <ReliefPlanet dayMap={dayMap} waterMask={waterMask} bumpMap={bumpMap} />
+                <EngravedPlanet dayMap={dayMap} waterMask={waterMask} bumpMap={bumpMap} />
 
                 <IsolineOverlay active={activeTheme === 'Climate Modeling and Predictions'} />
                 <CycloneOverlay active={activeTheme === 'Extreme Weather Events'} />
@@ -425,14 +417,9 @@ const Earth = ({ activeTheme, cameraControlsRef, interactive = true, showPopup =
                 <ReliefArcs active={activeTheme === 'Humanitarian Response'} />
                 <AquiferOverlay active={activeTheme === 'Terrestrial Water Changes'} />
 
-                {markerPosition && activeTheme && (
-                    <>
-                        <LocationMarker position={markerPosition} color={GLACIER} />
-                        {showPopup && <InfoPopup position={markerPosition} data={themeCoordinates[activeTheme]} />}
-                    </>
-                )}
+                {markerPosition && activeTheme && <LocationMarker position={markerPosition} />}
 
-                <Atmosphere />
+                <Halo />
             </group>
         </>
     );
