@@ -1,8 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import Hero from '../components/Hero';
-import ThemeJourney from '../components/ResearchGlobe/ThemeJourney';
+import GlobeExperience from '../components/GlobeExperience';
 
 const ease = [0.16, 1, 0.3, 1];
 
@@ -15,11 +14,9 @@ const stats = [
 
 const Landing = () => {
     return (
-        <main>
-            <Hero />
-
-            {/* Research themes with the globe */}
-            <ThemeJourney />
+        <main className="bg-paper">
+            {/* Hero + scrollytelling globe + locked research state */}
+            <GlobeExperience />
 
             {/* About */}
             <section id="about" className="relative border-t border-paper-deep bg-paper-dim scroll-mt-16">
