@@ -4,7 +4,18 @@ import { PerspectiveCamera } from '@react-three/drei';
 import { motion, AnimatePresence, useScroll, useTransform, useMotionTemplate, useMotionValueEvent } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import Scene, { FOV } from './Scene';
+import { useS2SData } from './S2SLayer';
 import { THEME_ORDER, themeCoordinates, THIRD_POLE, heroFraming } from './coordinates';
+
+const S2S_VARS = [
+    { key: 't2m', label: 'Temp' },
+    { key: 'precip', label: 'Rain' },
+    { key: 'wind', label: 'Wind' },
+];
+const RAMP_CSS = {
+    t2m: 'linear-gradient(to right, #2f6f9d, #eaf4fb, #d0603f)',
+    precip: 'linear-gradient(to right, #123044, #4aa3dd, #eaf7ff)',
+};
 
 const ease = [0.16, 1, 0.3, 1];
 const rise = {
@@ -85,6 +96,33 @@ const GlobeExperience = () => {
     }, [heroLight]);
     useEffect(() => () => window.dispatchEvent(new CustomEvent('hero-light', { detail: false })), []);
 
+    // ── S2S demo state: variable, lead-day dial, playback ──
+    const [s2sVar, setS2sVar] = useState(null);
+    const [s2sDay, setS2sDay] = useState(0);
+    const [playing, setPlaying] = useState(false);
+    const s2sStepRef = useRef(0);
+    const s2sData = useS2SData(locked); // prefetch once the globe locks
+    const s2sSteps = s2sData?.manifest.dims.steps ?? 42;
+    useEffect(() => {
+        if (!playing || !s2sVar) return;
+        let raf, last = performance.now();
+        const loop = (now) => {
+            const dt = Math.min((now - last) / 1000, 0.1);
+            last = now;
+            s2sStepRef.current = (s2sStepRef.current + dt * 5) % s2sSteps;
+            setS2sDay(Math.floor(s2sStepRef.current));
+            raf = requestAnimationFrame(loop);
+        };
+        raf = requestAnimationFrame(loop);
+        return () => cancelAnimationFrame(raf);
+    }, [playing, s2sVar, s2sSteps]);
+    const validDate = (day) => {
+        if (!s2sData) return '';
+        const d = new Date(new Date(s2sData.manifest.init + 'T00:00:00Z').getTime()
+            + s2sData.manifest.stepDays[day] * 864e5);
+        return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' });
+    };
+
     const heroOpacity = useTransform(scrollYProgress, [0.02, 0.13], [1, 0]);
     const heroShift = useTransform(scrollYProgress, [0.02, 0.13], [0, -60]);
     const hintOpacity = useTransform(scrollYProgress, [0, 0.06], [1, 0]);
@@ -131,7 +169,8 @@ const GlobeExperience = () => {
                 <div className="absolute inset-0">
                     <Canvas gl={{ antialias: true, alpha: true }} dpr={[1, 1.75]} style={{ touchAction: 'pan-y' }}>
                         <PerspectiveCamera makeDefault position={[0, 0, 3.4]} fov={FOV} near={0.1} far={100} />
-                        <Scene progress={scrollYProgress} locked={locked} activeTheme={activeTheme} anchorOffset={anchorOffset} />
+                        <Scene progress={scrollYProgress} locked={locked} activeTheme={activeTheme} anchorOffset={anchorOffset}
+                            s2sVariable={s2sVar} s2sStepRef={s2sStepRef} />
                     </Canvas>
                 </div>
 
@@ -244,6 +283,74 @@ const GlobeExperience = () => {
                             <p className="absolute top-20 right-8 font-mono text-[10px] uppercase tracking-widest text-ink-faint">
                                 Drag to rotate
                             </p>
+
+                            {/* ── S2S forecast console ── */}
+                            <div className="absolute bottom-6 right-6 sm:right-8 z-10 w-[290px] pointer-events-auto bg-black/60 backdrop-blur-md border border-paper-deep p-4">
+                                <p className="font-mono text-[10px] uppercase tracking-widest text-ink-faint">
+                                    S2S reforecast &middot; init {s2sData
+                                        ? new Date(s2sData.manifest.init + 'T00:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' })
+                                        : '…'}
+                                </p>
+                                <div className="mt-3 flex gap-1.5">
+                                    {S2S_VARS.map((v) => (
+                                        <button key={v.key}
+                                            onClick={() => { setS2sVar((cur) => (cur === v.key ? null : v.key)); setPlaying(false); }}
+                                            className={`px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest border transition-colors ${s2sVar === v.key
+                                                ? 'border-glacier text-paper bg-glacier'
+                                                : 'border-paper-deep text-ink-soft hover:text-ink hover:border-ink-faint'}`}
+                                        >
+                                            {v.label}
+                                        </button>
+                                    ))}
+                                </div>
+
+                                {s2sVar && s2sData && (
+                                    <div className="mt-4">
+                                        <div className="flex items-baseline justify-between font-mono text-[10px] uppercase tracking-widest">
+                                            <span className="text-glacier-light">Lead day {s2sData.manifest.stepDays[s2sDay]}</span>
+                                            <span className="text-ink-faint">valid {validDate(s2sDay)}</span>
+                                        </div>
+                                        <div className="mt-2 flex items-center gap-3">
+                                            <button
+                                                onClick={() => setPlaying((p) => !p)}
+                                                aria-label={playing ? 'Pause' : 'Play'}
+                                                className="grid place-items-center w-8 h-8 shrink-0 border border-paper-deep text-ink hover:border-glacier hover:text-glacier transition-colors"
+                                            >
+                                                {playing ? (
+                                                    <svg viewBox="0 0 16 16" className="w-3 h-3" fill="currentColor"><rect x="3" y="2" width="3.5" height="12" /><rect x="9.5" y="2" width="3.5" height="12" /></svg>
+                                                ) : (
+                                                    <svg viewBox="0 0 16 16" className="w-3 h-3" fill="currentColor"><path d="M4 2l10 6-10 6z" /></svg>
+                                                )}
+                                            </button>
+                                            <input
+                                                type="range" min={0} max={s2sSteps - 1} step={1} value={s2sDay}
+                                                onChange={(e) => { const v = +e.target.value; setS2sDay(v); s2sStepRef.current = v; setPlaying(false); }}
+                                                className="w-full accent-[#5aa7d6] cursor-pointer"
+                                                aria-label="Lead day"
+                                            />
+                                        </div>
+                                        {RAMP_CSS[s2sVar] ? (
+                                            <div className="mt-3">
+                                                <div className="h-1.5" style={{ background: RAMP_CSS[s2sVar] }} />
+                                                <div className="mt-1 flex justify-between font-mono text-[9px] text-ink-faint">
+                                                    <span>{s2sData.manifest.vars[s2sVar].min}{s2sData.manifest.vars[s2sVar].unit}</span>
+                                                    <span>{s2sData.manifest.vars[s2sVar].label}</span>
+                                                    <span>{s2sData.manifest.vars[s2sVar].max}{s2sData.manifest.vars[s2sVar].unit}</span>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <p className="mt-3 font-mono text-[9px] text-ink-faint">
+                                                {s2sData.manifest.vars.wind.label} &middot; arrows scale to {s2sData.manifest.vars.wind.maxSpeed} {s2sData.manifest.vars.wind.unit}
+                                            </p>
+                                        )}
+                                    </div>
+                                )}
+                                {!s2sVar && (
+                                    <p className="mt-3 font-mono text-[9px] text-ink-faint leading-relaxed">
+                                        Project a live forecast layer onto the region
+                                    </p>
+                                )}
+                            </div>
 
                             <div className="mx-auto max-w-7xl px-8 sm:px-14 h-full flex flex-col justify-end lg:justify-center pb-8 lg:pb-0">
                                 <div className="lg:max-w-md pointer-events-auto max-h-[56vh] lg:max-h-none overflow-y-auto lg:overflow-visible">

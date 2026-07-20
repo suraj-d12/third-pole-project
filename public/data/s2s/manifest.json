@@ -1,0 +1,86 @@
+{
+ "init": "2015-06-15",
+ "dims": {
+  "lon": 35,
+  "lat": 33,
+  "steps": 42
+ },
+ "stepDays": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
+  13,
+  14,
+  15,
+  16,
+  17,
+  18,
+  19,
+  20,
+  21,
+  22,
+  23,
+  24,
+  25,
+  26,
+  27,
+  28,
+  29,
+  30,
+  31,
+  32,
+  33,
+  34,
+  35,
+  36,
+  37,
+  38,
+  39,
+  40,
+  41,
+  42
+ ],
+ "latRange": [
+  6.5,
+  38.5
+ ],
+ "lonRange": [
+  66.5,
+  100.5
+ ],
+ "vars": {
+  "t2m": {
+   "file": "t2m.bin",
+   "min": -6.44,
+   "max": 41.1,
+   "unit": "\u00b0C",
+   "label": "2 m temperature"
+  },
+  "precip": {
+   "file": "precip.bin",
+   "min": 0.0,
+   "max": 57.41,
+   "unit": "mm/day",
+   "label": "Precipitation"
+  },
+  "wind": {
+   "files": [
+    "wind_u.bin",
+    "wind_v.bin"
+   ],
+   "format": "float32",
+   "maxSpeed": 14.41,
+   "unit": "m/s",
+   "label": "10 m wind"
+  }
+ }
+}

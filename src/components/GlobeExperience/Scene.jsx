@@ -14,6 +14,7 @@ import {
     CycloneOverlay, IsolineOverlay, IceFieldOverlay,
     CanopyOverlay, ReliefArcs, AquiferOverlay, LocationMarker,
 } from './Overlays';
+import S2SLayer from './S2SLayer';
 
 const { ACTION } = CameraControlsImpl;
 
@@ -106,7 +107,7 @@ const ControlsSync = ({ controlsRef, locked, activeTheme, anchorOffset }) => {
 };
 
 // ── ASSEMBLY ───────────────────────────────────────────────
-const Scene = ({ progress, locked, activeTheme, anchorOffset }) => {
+const Scene = ({ progress, locked, activeTheme, anchorOffset, s2sVariable, s2sStepRef }) => {
     const globeRef = useRef();
     const controlsRef = useRef();
 
@@ -144,6 +145,9 @@ const Scene = ({ progress, locked, activeTheme, anchorOffset }) => {
                 <ReliefArcs active={locked && activeTheme === 'Humanitarian Response'} />
                 <AquiferOverlay active={locked && activeTheme === 'Terrestrial Water Changes'} />
                 {locked && themeMarker && <LocationMarker position={themeMarker} />}
+
+                {/* S2S reforecast demo layers (heatmaps / wind arrows) */}
+                <S2SLayer active={locked} variable={s2sVariable} stepRef={s2sStepRef} />
             </group>
 
             <ThirdPoleMarker globeRef={globeRef} />
